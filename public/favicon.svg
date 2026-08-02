@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <rect width="64" height="64" rx="14" fill="#0a6b52"/>
+  <path d="M32 12l4 10h11l-9 6.5 3.5 10.5L32 32l-9.5 7 3.5-10.5-9-6.5h11L32 12z" fill="#e4c76b"/>
+  <text x="32" y="52" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="10" font-weight="700">PCBS</text>
+</svg>

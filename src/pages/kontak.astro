@@ -1,0 +1,72 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../data/site';
+---
+
+<BaseLayout
+  title="Kontak & Pendaftaran"
+  description={`Hubungi ${site.name} untuk informasi dan pendaftaran santri baru.`}
+>
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow">Hubungi Kami</span>
+      <h1>Kontak &amp; Pendaftaran</h1>
+      <p>Silakan hubungi panitia untuk informasi program, kunjungan, dan pendaftaran.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container split">
+      <div class="info-item">
+        <h3>Informasi Kontak</h3>
+        <div class="contact-list" style="margin-top:1rem">
+          <div class="contact-row">
+            <strong>Alamat</strong>
+            <span>{site.address}</span>
+          </div>
+          <div class="contact-row">
+            <strong>Email</strong>
+            <span><a href={`mailto:${site.email}`}>{site.email}</a></span>
+          </div>
+          <div class="contact-row">
+            <strong>Telepon / WhatsApp</strong>
+            <span><a href={`tel:${site.phone.replace(/\s+/g, '')}`}>{site.phone}</a></span>
+          </div>
+          <div class="contact-row">
+            <strong>Jam Layanan</strong>
+            <span>{site.hours}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-item">
+        <h3>Kirim Pesan</h3>
+        <form class="form" style="margin-top:1rem" method="POST" action={`mailto:${site.email}`} enctype="text/plain">
+          <label>
+            Nama
+            <input type="text" name="nama" required placeholder="Nama lengkap" />
+          </label>
+          <label>
+            Email
+            <input type="email" name="email" required placeholder="email@contoh.com" />
+          </label>
+          <label>
+            Perihal
+            <select name="perihal" required>
+              <option value="">Pilih perihal</option>
+              <option>Info Pendaftaran</option>
+              <option>Kunjungan</option>
+              <option>Kerja Sama</option>
+              <option>Lainnya</option>
+            </select>
+          </label>
+          <label>
+            Pesan
+            <textarea name="pesan" required placeholder="Tuliskan pesan Anda"></textarea>
+          </label>
+          <button class="btn btn-primary" type="submit">Kirim Pesan</button>
+        </form>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

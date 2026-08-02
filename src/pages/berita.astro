@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { news, site } from '../data/site';
+---
+
+<BaseLayout
+  title="Berita & Kegiatan"
+  description={`Berita dan kegiatan terbaru dari ${site.name}.`}
+>
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow">Informasi Terkini</span>
+      <h1>Berita &amp; Kegiatan</h1>
+      <p>Update kegiatan pendidikan, keagamaan, dan prestasi santri.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="news-grid">
+        {
+          news.map((item) => (
+            <article class="news-item" id={item.slug}>
+              <div class="news-meta">
+                <span>{item.category}</span>
+                <time datetime={item.date}>{item.date}</time>
+              </div>
+              <h3>{item.title}</h3>
+              <p>{item.excerpt}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</BaseLayout>

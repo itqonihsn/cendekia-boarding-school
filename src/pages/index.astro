@@ -1,0 +1,272 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { news, programs, site } from '../data/site';
+---
+
+<BaseLayout
+  title={`${site.name} | Pendidikan Islam Unggul`}
+  description="Website resmi Cendekia Boarding School — Pesantren Modern Terpadu di bawah Yayasan Syarif Muslih Institute."
+>
+  <section class="home-hero">
+    <div class="hero-media" aria-hidden="true"></div>
+    <div class="container hero-content">
+      <img class="hero-logo" src={site.logo} alt={site.name} width="140" height="140" />
+      <p class="brand-signal">{site.name}</p>
+      <p class="brand-foundation">{site.foundation}</p>
+      <h1>Mendidik Generasi <em>Berilmu</em> &amp; Berakhlak</h1>
+      <p>
+        Pesantren Modern Terpadu — memadukan tahfidz, keilmuan, serta pembinaan adab
+        dalam lingkungan boarding yang terarah.
+      </p>
+      <div class="hero-actions">
+        <a class="btn btn-yellow" href="/program">Lihat Program</a>
+        <a class="btn btn-outline" href="/kontak">Info Pendaftaran</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head center">
+        <span class="eyebrow">Fondasi Kami</span>
+        <h2>Pendidikan yang Seimbang &amp; Bermakna</h2>
+        <p class="lead">Ilmu, iman, dan akhlak tumbuh bersama dalam ritme kehidupan pesantren yang tenang dan disiplin.</p>
+      </div>
+      <div class="feature-grid">
+        <article class="feature-item">
+          <div class="feature-icon">01</div>
+          <h3>Pendidikan Qur’ani</h3>
+          <p>Pembinaan tahfidz dan pemahaman Al-Qur’an yang terstruktur.</p>
+        </article>
+        <article class="feature-item">
+          <div class="feature-icon">02</div>
+          <h3>Akademik Unggul</h3>
+          <p>Kurikulum kuat agar santri siap ke jenjang pendidikan tinggi.</p>
+        </article>
+        <article class="feature-item">
+          <div class="feature-icon">03</div>
+          <h3>Adab &amp; Karakter</h3>
+          <p>Pembiasaan ibadah, adab, dan kepemimpinan dalam asrama.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="quote-band">
+    <div class="container">
+      <p>“Sebaik-baik manusia adalah yang paling bermanfaat bagi manusia.”</p>
+      <cite>— Hadis Nabi Muhammad ﷺ</cite>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container split">
+      <div class="panel" role="img" aria-label="Logo Cendekia Boarding School">
+        <img class="panel-logo" src={site.logo} alt="" />
+      </div>
+      <div>
+        <div class="section-head">
+          <span class="eyebrow">Tentang Kami</span>
+          <h2>{site.name}</h2>
+          <p class="lead">
+            Lembaga pendidikan Islam berasrama yang membentuk pribadi muslim cerdas, beriman, dan
+            berakhlak mulia — memadukan tradisi pesantren dengan standar pendidikan modern.
+          </p>
+        </div>
+        <ul class="check-list">
+          <li>Integrasi kurikulum diniyah dan akademik</li>
+          <li>Pembinaan bahasa Arab &amp; Inggris</li>
+          <li>Penguatan karakter dan soft skill</li>
+          <li>Lingkungan belajar aman, nyaman, dan religius</li>
+        </ul>
+        <p style="margin-top: 1.5rem">
+          <a class="btn btn-primary" href="/tentang">Selengkapnya</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top: 0">
+    <div class="container">
+      <div class="section-head center">
+        <span class="eyebrow">Program</span>
+        <h2>Program Unggulan</h2>
+      </div>
+      <div class="feature-grid">
+        {
+          programs.slice(0, 3).map((item, i) => (
+            <article class="feature-item">
+              <div class="feature-icon">{String(i + 1).padStart(2, '0')}</div>
+              <h3>{item.title}</h3>
+              <p>{item.desc}</p>
+            </article>
+          ))
+        }
+      </div>
+      <p style="text-align:center;margin-top:1.75rem">
+        <a class="btn btn-outline-dark" href="/program">Semua Program</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top: 0">
+    <div class="container">
+      <div class="section-head center">
+        <span class="eyebrow">Berita</span>
+        <h2>Kegiatan Terbaru</h2>
+      </div>
+      <div class="news-grid">
+        {
+          news.map((item) => (
+            <article class="news-item">
+              <div class="news-meta">
+                <span>{item.category}</span>
+                <span>{item.date}</span>
+              </div>
+              <h3>{item.title}</h3>
+              <p>{item.excerpt}</p>
+            </article>
+          ))
+        }
+      </div>
+      <p style="text-align:center;margin-top:1.75rem">
+        <a class="btn btn-outline-dark" href="/berita">Lihat Berita</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="quote-band">
+    <div class="container">
+      <p>Siap menjadi bagian dari keluarga besar Pesantren Cendekia?</p>
+      <p style="margin-top: 1.25rem">
+        <a class="btn btn-outline" href="/kontak">Hubungi Panitia Pendaftaran</a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .home-hero {
+    position: relative;
+    min-height: min(88vh, 760px);
+    min-height: min(88dvh, 760px);
+    display: grid;
+    align-items: end;
+    overflow: hidden;
+    color: white;
+  }
+
+  .hero-media {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(105deg, rgba(20, 90, 31, 0.94) 0%, rgba(36, 155, 48, 0.78) 48%, rgba(46, 175, 58, 0.45) 100%),
+      radial-gradient(circle at 78% 30%, rgba(255, 230, 0, 0.35), transparent 35%),
+      linear-gradient(145deg, #145a1f, #2eaf3a 55%, #3ec04a);
+  }
+
+  .hero-media::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 8l6 14h15l-12 9 5 14-14-9-14 9 5-14-12-9h15z' fill='none' stroke='rgba(255,230,0,0.14)' stroke-width='1'/%3E%3C/svg%3E");
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    padding: calc(7rem + env(safe-area-inset-top)) 0 4.5rem;
+    max-width: 40rem;
+    margin-left: max(1rem, calc((100% - var(--container)) / 2));
+    margin-right: auto;
+    width: min(40rem, calc(100% - 2rem));
+    animation: rise 0.8s ease both;
+  }
+
+  .hero-logo {
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
+    margin-bottom: 1rem;
+    filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.25));
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 50%;
+    padding: 0.35rem;
+  }
+
+  .brand-signal {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(1.45rem, 3.2vw, 2.1rem);
+    color: var(--yellow-400);
+    letter-spacing: 0.02em;
+  }
+
+  .brand-foundation {
+    margin: 0.25rem 0 1rem;
+    color: rgba(255, 255, 255, 0.85);
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+
+  .hero-content h1 {
+    color: white;
+    font-size: clamp(2.4rem, 6vw, 4rem);
+    max-width: 12ch;
+    margin-bottom: 1rem;
+  }
+
+  .hero-content h1 em {
+    font-style: normal;
+    color: var(--yellow-400);
+  }
+
+  .hero-content > p {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.08rem;
+    max-width: 32em;
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.75rem;
+  }
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 700px) {
+    .home-hero {
+      min-height: 78vh;
+      min-height: 78dvh;
+    }
+    .hero-content {
+      padding: calc(5.5rem + env(safe-area-inset-top)) 0 3.25rem;
+      margin-left: 1rem;
+      width: calc(100% - 2rem);
+    }
+    .hero-content h1 {
+      max-width: none;
+    }
+    .hero-logo {
+      width: 96px;
+      height: 96px;
+    }
+    .hero-actions {
+      flex-direction: column;
+    }
+    .hero-actions .btn {
+      width: 100%;
+    }
+  }
+</style>

@@ -1,0 +1,47 @@
+# Contoh Nginx untuk Cendekia Boarding School (static Astro)
+#
+# 1. Copy ke VPS:
+#    sudo cp deploy/nginx.conf.example /etc/nginx/sites-available/cendekia
+# 2. Edit server_name ke domain kamu
+# 3. Aktifkan:
+#    sudo ln -s /etc/nginx/sites-available/cendekia /etc/nginx/sites-enabled/
+#    sudo nginx -t && sudo systemctl reload nginx
+# 4. Setelah domain aktif, pasang SSL:
+#    sudo apt install certbot python3-certbot-nginx -y
+#    sudo certbot --nginx -d domain-kamu.com -d www.domain-kamu.com
+
+server {
+    listen 80;
+    listen [::]:80;
+    server_name domain-kamu.com www.domain-kamu.com;
+
+    root /var/www/cendekia-boarding-school;
+    index index.html;
+
+    # keamanan dasar
+    server_tokens off;
+    add_header X-Content-Type-Options nosniff always;
+    add_header X-Frame-Options SAMEORIGIN always;
+    add_header Referrer-Policy strict-origin-when-cross-origin always;
+
+    # Astro static + trailing slash pages
+    location / {
+        try_files $uri $uri/ $uri.html /index.html;
+    }
+
+    # cache aset statis
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|webp|woff2?)$ {
+        expires 7d;
+        add_header Cache-Control "public, max-age=604800, immutable";
+        try_files $uri =404;
+    }
+
+    # jangan cache HTML
+    location ~* \.html$ {
+        add_header Cache-Control "no-cache";
+    }
+
+    gzip on;
+    gzip_types text/plain text/css application/javascript application/json image/svg+xml;
+    gzip_min_length 1024;
+}
