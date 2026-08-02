@@ -4,11 +4,12 @@ export const site = {
   fullName: 'Pesantren Modern Terpadu Cendekia Boarding School',
   foundation: 'Yayasan Syarif Muslih Institute',
   tagline: 'Pesantren Modern Terpadu — mendidik generasi berilmu, berakhlak, dan berdaya saing',
-  email: 'info@pesantrencendekia.sch.id',
+  email: 'info@cbsbogor.or.id',
   phone: '+62 812-3456-7890',
-  address: 'Jl. Pendidikan No. 1, Indonesia',
+  address: 'Bogor, Indonesia',
   hours: 'Senin–Sabtu, 08.00–16.00 WIB',
   logo: '/logo.png',
+  domain: 'https://cbsbogor.or.id',
 };
 
 export const nav = [

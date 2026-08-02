@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://pesantren-cendekia.vercel.app/sitemap-index.xml
+Sitemap: https://cbsbogor.or.id/sitemap-index.xml
