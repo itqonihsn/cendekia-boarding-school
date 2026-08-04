@@ -27,7 +27,7 @@ jobs:
 
       - name: Build Astro site
         env:
-          SITE_URL: https://cbsbogor.or.id
+          SITE_URL: https://cendekiaboardingschool.id
         run: npm run build
 
       - name: Upload dist artifact

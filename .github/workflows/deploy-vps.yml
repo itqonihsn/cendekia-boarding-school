@@ -5,7 +5,7 @@
 #   VPS_WEB_DIR   e.g. /var/www/cendekia-boarding-school
 # Optional:
 #   SSH_PORT      (default 22)
-#   SITE_URL      e.g. https://cbsbogor.or.id  (untuk sitemap/canonical)
+#   SITE_URL      e.g. https://cendekiaboardingschool.id  (untuk sitemap/canonical)
 
 name: Deploy Website to VPS
 
@@ -34,7 +34,7 @@ jobs:
 
       - name: Build Astro site
         env:
-          SITE_URL: ${{ secrets.SITE_URL != '' && secrets.SITE_URL || 'https://cbsbogor.or.id' }}
+          SITE_URL: ${{ secrets.SITE_URL != '' && secrets.SITE_URL || 'https://cendekiaboardingschool.id' }}
         run: npm run build
 
       - name: Pack dist
