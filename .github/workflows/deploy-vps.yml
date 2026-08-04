@@ -1,11 +1,16 @@
-# Deploy static site to VPS (main → Nginx web root)
+# Deploy static site to VPS (main → web root)
 #
 # Required GitHub secrets:
 #   SSH_HOST, SSH_USER, SSH_KEY
 #   VPS_WEB_DIR   e.g. /var/www/cendekia-boarding-school
 # Optional:
 #   SSH_PORT      (default 22)
-#   SITE_URL      e.g. https://cendekiaboardingschool.id  (untuk sitemap/canonical)
+#   SITE_URL      e.g. https://cendekiaboardingschool.id
+#
+# Catatan: SSH user harus punya tulis ke VPS_WEB_DIR (tanpa sudo password).
+# One-time di VPS:
+#   sudo mkdir -p /var/www/cendekia-boarding-school
+#   sudo chown -R $USER:$USER /var/www/cendekia-boarding-school
 
 name: Deploy Website to VPS
 
@@ -53,7 +58,7 @@ jobs:
           target: /tmp/cendekia-web
           overwrite: true
 
-      - name: Extract to web root & reload Nginx
+      - name: Extract to web root
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -64,12 +69,21 @@ jobs:
             set -euo pipefail
             WEB_DIR="${{ secrets.VPS_WEB_DIR }}"
             test -n "$WEB_DIR"
-            sudo mkdir -p "$WEB_DIR"
-            sudo tar xzf /tmp/cendekia-web/website-dist.tgz -C "$WEB_DIR"
-            sudo chown -R www-data:www-data "$WEB_DIR" 2>/dev/null || sudo chown -R nginx:nginx "$WEB_DIR" 2>/dev/null || true
-            if command -v nginx >/dev/null 2>&1; then
-              sudo nginx -t
-              sudo systemctl reload nginx
-            fi
+
+            # Tanpa sudo interaktif — folder harus owned oleh user SSH
+            mkdir -p "$WEB_DIR"
+            tar xzf /tmp/cendekia-web/website-dist.tgz -C "$WEB_DIR"
             rm -f /tmp/cendekia-web/website-dist.tgz
+
+            # Reload Nginx hanya jika passwordless sudo tersedia (opsional)
+            if command -v nginx >/dev/null 2>&1; then
+              if sudo -n nginx -t 2>/dev/null; then
+                sudo -n systemctl reload nginx
+                echo "Nginx reloaded"
+              else
+                echo "Skip Nginx reload (sudo password diperlukan). File sudah ter-deploy."
+              fi
+            fi
+
             echo "=== WEBSITE DEPLOY OK (${{ github.sha }}) → $WEB_DIR ==="
+            ls -lah "$WEB_DIR" | head -n 20

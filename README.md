@@ -23,6 +23,12 @@ npm run dev
 | `SSH_PORT` | `22` (opsional) |
 
 ### Nginx di VPS
+Pastikan folder website **dimiliki user SSH** (supaya deploy CI tidak butuh `sudo` password):
+```bash
+sudo mkdir -p /var/www/cendekia-boarding-school
+sudo chown -R $USER:$USER /var/www/cendekia-boarding-school
+```
+
 ```bash
 sudo cp deploy/nginx.conf.example /etc/nginx/sites-available/cendekia
 sudo ln -sf /etc/nginx/sites-available/cendekia /etc/nginx/sites-enabled/
