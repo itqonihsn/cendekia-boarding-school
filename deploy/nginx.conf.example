@@ -1,14 +1,14 @@
-# Nginx — Cendekia Boarding School (cbsbogor.or.id)
+# Nginx — Cendekia Boarding School (cendekiaboardingschool.id)
 #
 # sudo cp deploy/nginx.conf.example /etc/nginx/sites-available/cendekia
 # sudo ln -sf /etc/nginx/sites-available/cendekia /etc/nginx/sites-enabled/
 # sudo nginx -t && sudo systemctl reload nginx
-# sudo certbot --nginx -d cbsbogor.or.id -d www.cbsbogor.or.id
+# sudo certbot --nginx -d cendekiaboardingschool.id -d www.cendekiaboardingschool.id
 
 server {
     listen 80;
     listen [::]:80;
-    server_name cbsbogor.or.id www.cbsbogor.or.id;
+    server_name cendekiaboardingschool.id www.cendekiaboardingschool.id;
 
     root /var/www/cendekia-boarding-school;
     index index.html;

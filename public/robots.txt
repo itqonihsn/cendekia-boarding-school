@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://cbsbogor.or.id/sitemap-index.xml
+Sitemap: https://cendekiaboardingschool.id/sitemap-index.xml

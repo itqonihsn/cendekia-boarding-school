@@ -2,7 +2,7 @@
 
 Website resmi **Cendekia Boarding School** (Pesantren Modern Terpadu · Yayasan Syarif Muslih Institute).
 
-**Domain production:** [https://cbsbogor.or.id](https://cbsbogor.or.id)
+**Domain production:** [https://cendekiaboardingschool.id](https://cendekiaboardingschool.id)
 
 ## Lokal
 ```bash
@@ -19,7 +19,7 @@ npm run dev
 | `SSH_USER` | user SSH |
 | `SSH_KEY` | private key PEM |
 | `VPS_WEB_DIR` | `/var/www/cendekia-boarding-school` |
-| `SITE_URL` | `https://cbsbogor.or.id` |
+| `SITE_URL` | `https://cendekiaboardingschool.id` |
 | `SSH_PORT` | `22` (opsional) |
 
 ### Nginx di VPS
@@ -30,10 +30,10 @@ sudo nginx -t && sudo systemctl reload nginx
 ```
 
 ### SSL
-Pastikan DNS `cbsbogor.or.id` & `www.cbsbogor.or.id` mengarah ke IP VPS, lalu:
+Pastikan DNS `cendekiaboardingschool.id` & `www.cendekiaboardingschool.id` mengarah ke IP VPS, lalu:
 ```bash
 sudo apt install -y certbot python3-certbot-nginx
-sudo certbot --nginx -d cbsbogor.or.id -d www.cbsbogor.or.id
+sudo certbot --nginx -d cendekiaboardingschool.id -d www.cendekiaboardingschool.id
 ```
 
 Push ke `main` → auto deploy (setelah workflow ter-push).
