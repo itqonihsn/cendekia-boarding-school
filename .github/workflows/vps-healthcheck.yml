@@ -23,7 +23,8 @@ jobs:
             echo "=== App curl :4321 ==="
             curl -sf http://127.0.0.1:4321/admin/login | grep -o '<title>[^<]*' || echo "FAIL curl 4321"
             echo "=== Caddyfile (snap) ==="
-            sudo cat /var/snap/caddy/current/Caddyfile 2>/dev/null || echo "no snap caddyfile"
+            cat /var/snap/caddy/common/caddy/Caddyfile 2>/dev/null || echo "no common/caddy/Caddyfile"
+            cat /var/snap/caddy/current/Caddyfile 2>/dev/null || echo "no current/Caddyfile"
             echo "=== Caddy validate ==="
             sudo snap run caddy validate --config /var/snap/caddy/current/Caddyfile 2>&1 || true
             echo "=== Caddy service ==="
