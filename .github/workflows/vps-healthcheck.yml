@@ -1,0 +1,32 @@
+# Diagnostik VPS (Caddy + PM2 + Node) — manual trigger
+name: VPS Healthcheck
+
+on:
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT != '' && secrets.SSH_PORT || '22' }}
+          script: |
+            set -x
+            echo "=== Node ==="
+            node -v || true
+            echo "=== PM2 ==="
+            pm2 list || true
+            echo "=== App curl :4321 ==="
+            curl -sf http://127.0.0.1:4321/admin/login | grep -o '<title>[^<]*' || echo "FAIL curl 4321"
+            echo "=== Caddyfile (snap) ==="
+            sudo cat /var/snap/caddy/current/Caddyfile 2>/dev/null || echo "no snap caddyfile"
+            echo "=== Caddy validate ==="
+            sudo snap run caddy validate --config /var/snap/caddy/current/Caddyfile 2>&1 || true
+            echo "=== Caddy service ==="
+            sudo snap services caddy 2>&1 || true
+            echo "=== Caddy via localhost (if :80) ==="
+            curl -sI -H "Host: cendekiaboardingschool.id" http://127.0.0.1/admin/login | head -5 || true

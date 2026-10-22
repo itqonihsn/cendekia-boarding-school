@@ -1,0 +1,4 @@
+# Versi minimal — pakai jika validate Caddy gagal (request_body tidak didukung)
+cendekiaboardingschool.id, www.cendekiaboardingschool.id {
+	reverse_proxy 127.0.0.1:4321
+}
