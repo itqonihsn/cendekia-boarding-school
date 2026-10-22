@@ -35,6 +35,8 @@ const error = Astro.url.searchParams.get('error');
     />
     <meta name="robots" content="noindex, nofollow" />
     <title>{title} · Admin CBS</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" />
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js" defer></script>
   </head>
   <body>
     <div class="admin-shell">
@@ -66,5 +68,69 @@ const error = Astro.url.searchParams.get('error');
         <slot />
       </main>
     </div>
+    <script is:inline>
+      function syncQuillToHidden(quill, hidden) {
+        const html = quill.root.innerHTML.trim();
+        hidden.value = html === '<p><br></p>' ? '' : html;
+      }
+
+      function initAdminQuills() {
+        if (typeof Quill === 'undefined') return;
+        document.querySelectorAll('.quill-mount:not([data-ready])').forEach((mount) => {
+          mount.dataset.ready = '1';
+          const form = mount.closest('form');
+          const field = mount.dataset.field;
+          const hidden = form?.querySelector(`textarea[name="${field}"]`);
+          if (!hidden) return;
+
+          const quill = new Quill(mount, {
+            theme: 'snow',
+            modules: {
+              toolbar: [
+                [{ header: [2, 3, false] }],
+                ['bold', 'italic', 'underline'],
+                [{ list: 'ordered' }, { list: 'bullet' }],
+                ['link', 'blockquote'],
+                ['clean'],
+              ],
+            },
+          });
+
+          const initial = mount.dataset.initial || '';
+          if (initial.trim()) {
+            quill.clipboard.dangerouslyPasteHTML(initial);
+          }
+          syncQuillToHidden(quill, hidden);
+
+          quill.on('text-change', () => syncQuillToHidden(quill, hidden));
+
+          form?.addEventListener(
+            'submit',
+            (event) => {
+              syncQuillToHidden(quill, hidden);
+              const required = mount.dataset.required === '1';
+              const empty = !quill.getText().trim();
+              if (required && empty) {
+                event.preventDefault();
+                quill.focus();
+                alert('Mohon isi deskripsi lengkap.');
+              }
+            },
+            { capture: true },
+          );
+        });
+      }
+
+      function bootQuill() {
+        if (typeof Quill !== 'undefined') {
+          initAdminQuills();
+        } else {
+          window.addEventListener('load', initAdminQuills, { once: true });
+        }
+      }
+
+      bootQuill();
+      document.addEventListener('astro:page-load', bootQuill);
+    </script>
   </body>
 </html>

@@ -10,7 +10,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "start": "node dist/server/entry.mjs",
-    "astro": "astro"
+    "astro": "astro",
+    "qa:admin": "node scripts/qa-admin.mjs"
   },
   "dependencies": {
     "@astrojs/node": "^11.1.9",

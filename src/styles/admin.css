@@ -1,7 +1,8 @@
 .admin-shell {
   min-height: 100vh;
+  min-height: 100dvh;
   display: grid;
-  grid-template-columns: 240px 1fr;
+  grid-template-columns: 240px minmax(0, 1fr);
   background: #f4f7f4;
   color: var(--ink);
 }
@@ -49,6 +50,7 @@
 }
 
 .admin-main {
+  min-width: 0;
   padding: 1.5rem clamp(1rem, 3vw, 2rem) 2.5rem;
 }
 
@@ -67,6 +69,12 @@
   border-radius: 1rem;
   padding: 1.25rem;
   box-shadow: var(--shadow);
+  max-width: 100%;
+}
+
+.admin-card .form,
+.admin-card.form {
+  max-width: 100%;
 }
 
 .admin-card + .admin-card {
@@ -230,6 +238,7 @@
   .admin-sidebar {
     position: static;
     height: auto;
+    max-height: none;
     padding-bottom: calc(1rem + env(safe-area-inset-bottom));
   }
 
@@ -252,6 +261,10 @@
 
   .admin-main {
     padding: 1rem 1rem calc(1.5rem + env(safe-area-inset-bottom));
+  }
+
+  .admin-grid-3 {
+    grid-template-columns: 1fr;
   }
 
   .admin-table {

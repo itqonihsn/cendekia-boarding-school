@@ -1,11 +1,14 @@
 import type { APIRoute } from 'astro';
 import { getHomeContent, saveHomeContent } from '../../../lib/content';
+import { adminErrorRedirect } from '../../../lib/admin-api';
 import { parseImagePathFromForm } from '../../../lib/admin-form';
 import { saveUpload } from '../../../lib/upload';
 
 export const prerender = false;
 
 export const POST: APIRoute = async ({ request, redirect }) => {
+  const returnTo = '/admin/home';
+  try {
   const form = await request.formData();
   const current = getHomeContent();
 
@@ -42,5 +45,8 @@ export const POST: APIRoute = async ({ request, redirect }) => {
     ctaButton: String(form.get('ctaButton') || current.ctaButton),
   });
 
-  return redirect('/admin/home?saved=1');
+  return redirect(`${returnTo}?saved=1`);
+  } catch (err) {
+    return redirect(adminErrorRedirect(returnTo, err));
+  }
 };

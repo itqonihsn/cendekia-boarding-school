@@ -1,4 +1,5 @@
 import { getDb, readJson, writeJson } from './db';
+import { ensureUniqueSlug } from './slug';
 import {
   defaultHomeContent,
   defaultPageHero,
@@ -136,7 +137,8 @@ export function upsertProgram(
   input: Partial<ProgramItem> & { title: string; description: string; body: string },
 ) {
   const db = getDb();
-  const slug = input.slug?.trim() || slugify(input.title);
+  const rawSlug = input.slug?.trim() || slugify(input.title);
+  const slug = ensureUniqueSlug('programs', rawSlug || slugify(input.title || 'program'), input.id);
   const videoKind = input.videoKind || 'none';
 
   if (input.id) {
@@ -206,7 +208,8 @@ export function upsertFacility(
   input: Partial<FacilityItem> & { title: string; description: string; body: string },
 ) {
   const db = getDb();
-  const slug = input.slug?.trim() || slugify(input.title);
+  const rawSlug = input.slug?.trim() || slugify(input.title);
+  const slug = ensureUniqueSlug('facilities', rawSlug || slugify(input.title || 'fasilitas'), input.id);
   const videoKind = input.videoKind || 'none';
 
   if (input.id) {
@@ -284,7 +287,8 @@ export function slugify(text: string): string {
 
 export function upsertNews(input: Partial<NewsItem> & { title: string; excerpt: string; body: string }) {
   const db = getDb();
-  const slug = input.slug?.trim() || slugify(input.title);
+  const rawSlug = input.slug?.trim() || slugify(input.title);
+  const slug = ensureUniqueSlug('news', rawSlug || slugify(input.title || 'berita'), input.id);
   const publishedAt = input.publishedAt || new Date().toISOString().slice(0, 10);
   const videoKind = input.videoKind || 'none';
 

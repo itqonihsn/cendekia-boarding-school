@@ -52,7 +52,7 @@ const {
     </select>
   </label>
   <label>URL YouTube
-    <input type="url" name="videoUrl" value={videoUrl} placeholder="https://www.youtube.com/watch?v=..." />
+    <input type="text" name="videoUrl" value={videoUrl} inputmode="url" autocomplete="off" placeholder="https://www.youtube.com/watch?v=..." />
   </label>
   <p class="admin-media-hint">Kosongkan URL lalu simpan untuk menghapus video YouTube.</p>
   <input type="hidden" name="videoPath" value={videoPath} />
