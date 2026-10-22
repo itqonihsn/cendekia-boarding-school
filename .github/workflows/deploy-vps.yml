@@ -76,19 +76,24 @@ jobs:
             tar xzf /tmp/cendekia-web/website-dist.tgz -C "$WEB_DIR"
             rm -f /tmp/cendekia-web/website-dist.tgz
 
-            export HOST=127.0.0.1
-            export PORT=4321
-            export DATA_DIR
-            export SESSION_SECRET
-            export ADMIN_USERNAME="${ADMIN_USERNAME:-admin}"
-            export ADMIN_PASSWORD="${ADMIN_PASSWORD:-}"
+            ADMIN_USERNAME="${ADMIN_USERNAME:-admin}"
+            printf 'HOST=127.0.0.1\nPORT=4321\nDATA_DIR=%s\nSESSION_SECRET=%s\nADMIN_USERNAME=%s\nNODE_ENV=production\n' \
+              "$DATA_DIR" "$SESSION_SECRET" "$ADMIN_USERNAME" > "$DATA_DIR/app.env"
+            chmod 600 "$DATA_DIR/app.env"
+
+            echo "Node on VPS: $(node -v 2>/dev/null || echo 'NOT INSTALLED')"
 
             if command -v pm2 >/dev/null 2>&1; then
               cd "$WEB_DIR"
-              pm2 startOrRestart ecosystem.config.cjs --update-env
+              pm2 delete cendekia-web 2>/dev/null || true
+              pm2 start ecosystem.config.cjs --update-env --node-args="--env-file=$DATA_DIR/app.env"
               pm2 save || true
+              sleep 4
+              pm2 status || true
+              pm2 logs cendekia-web --lines 40 --nostream || true
             else
               echo "PM2 not installed — install pm2 and run ecosystem.config.cjs"
+              exit 1
             fi
 
             if command -v nginx >/dev/null 2>&1; then
@@ -99,7 +104,12 @@ jobs:
 
             echo "=== DEPLOY OK (${{ github.sha }}) app=$WEB_DIR data=$DATA_DIR ==="
             echo "NOTE: Reverse proxy (Caddy/Nginx) harus arahkan ke 127.0.0.1:4321 — lihat deploy/Caddyfile.example"
-            curl -sf -o /dev/null http://127.0.0.1:4321/admin/login && echo "Node /admin/login OK" || echo "WARN: Node tidak merespons di :4321"
+            if curl -sf http://127.0.0.1:4321/admin/login | grep -q 'Login Admin'; then
+              echo "Node /admin/login OK"
+            else
+              echo "FATAL: Node tidak melayani /admin/login — cek pm2 logs di atas (Node harus >= 22.23.4)"
+              exit 1
+            fi
 
         env:
           SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
