@@ -1,0 +1,33 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import AdminDetailFields from '../../../components/AdminDetailFields.astro';
+import { getProgramById } from '../../../lib/content';
+
+const id = Number(Astro.params.id);
+const item = getProgramById(id);
+if (!item) return Astro.redirect('/admin/programs');
+---
+
+<AdminLayout title={`Edit: ${item.title}`} active="programs">
+  <form class="form admin-card" method="POST" action="/api/admin/programs" enctype="multipart/form-data">
+    <input type="hidden" name="id" value={item.id} />
+    <input type="hidden" name="returnTo" value={`/admin/programs/${item.id}`} />
+    <label>Judul<input type="text" name="title" value={item.title} required /></label>
+    <label>Urutan tampil<input type="number" name="sortOrder" value={item.sortOrder} /></label>
+    <AdminDetailFields
+      slug={item.slug}
+      excerpt={item.description}
+      body={item.body}
+      coverImage={item.image}
+      videoKind={item.videoKind}
+      videoUrl={item.videoUrl}
+      videoPath={item.videoPath}
+      published={item.published}
+      excerptLabel="Ringkasan (kartu di halaman program)"
+    />
+    <div style="display:flex;gap:.5rem;margin-top:1rem">
+      <button class="btn btn-primary" type="submit">Simpan</button>
+      <button class="btn btn-outline" type="submit" name="action" value="delete" formnovalidate onclick="return confirm('Hapus program ini?')">Hapus</button>
+    </div>
+  </form>
+</AdminLayout>

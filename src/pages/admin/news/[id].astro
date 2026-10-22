@@ -1,5 +1,6 @@
 ---
 import AdminLayout from '../../../layouts/AdminLayout.astro';
+import AdminDetailFields from '../../../components/AdminDetailFields.astro';
 import { getNewsById } from '../../../lib/content';
 
 const id = Number(Astro.params.id);
@@ -12,32 +13,20 @@ if (!item) return Astro.redirect('/admin/news');
     <input type="hidden" name="id" value={item.id} />
     <input type="hidden" name="returnTo" value={`/admin/news/${item.id}`} />
     <label>Judul<input type="text" name="title" value={item.title} required /></label>
-    <label>Slug<input type="text" name="slug" value={item.slug} required /></label>
     <div class="admin-grid-3">
       <label>Kategori<input type="text" name="category" value={item.category} /></label>
       <label>Tanggal<input type="date" name="publishedAt" value={item.publishedAt} required /></label>
-      <label style="display:flex;align-items:center;gap:.5rem;margin-top:1.6rem">
-        <input type="checkbox" name="published" checked={item.published} /> Publikasikan
-      </label>
     </div>
-    <label>Ringkasan<textarea name="excerpt" required>{item.excerpt}</textarea></label>
-    <label>Isi lengkap (HTML)<textarea name="body" rows="12" required>{item.body}</textarea></label>
-    <div class="admin-grid-2">
-      <label>Path cover<input type="text" name="coverImage" value={item.coverImage} /></label>
-      <label>Upload cover baru<input type="file" name="coverFile" accept="image/*" /></label>
-    </div>
-    {item.coverImage && <img src={item.coverImage} alt="" width="160" style="border-radius:.5rem" />}
-    <label>Jenis video
-      <select name="videoKind">
-        <option value="none" selected={item.videoKind === 'none'}>Tanpa video</option>
-        <option value="youtube" selected={item.videoKind === 'youtube'}>YouTube</option>
-        <option value="upload" selected={item.videoKind === 'upload'}>Upload</option>
-      </select>
-    </label>
-    <label>URL YouTube<input type="url" name="videoUrl" value={item.videoUrl} /></label>
-    <input type="hidden" name="videoPath" value={item.videoPath} />
-    <label>Upload video baru<input type="file" name="videoFile" accept="video/*" /></label>
-    {item.videoPath && <video src={item.videoPath} controls style="max-width:320px" />}
+    <AdminDetailFields
+      slug={item.slug}
+      excerpt={item.excerpt}
+      body={item.body}
+      coverImage={item.coverImage}
+      videoKind={item.videoKind}
+      videoUrl={item.videoUrl}
+      videoPath={item.videoPath}
+      published={item.published}
+    />
     <div style="display:flex;gap:.5rem;margin-top:1rem">
       <button class="btn btn-primary" type="submit">Simpan</button>
       <button class="btn btn-outline" type="submit" name="action" value="delete" formnovalidate onclick="return confirm('Hapus berita ini?')">Hapus</button>

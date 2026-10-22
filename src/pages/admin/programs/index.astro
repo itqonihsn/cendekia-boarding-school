@@ -1,0 +1,33 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import { listPrograms } from '../../../lib/content';
+
+const programs = listPrograms();
+---
+
+<AdminLayout title="Program" active="programs">
+  <p><a class="btn btn-primary" href="/admin/programs/new">+ Tambah program</a></p>
+  <div class="admin-card" style="margin-top:1rem">
+    <table class="admin-table">
+      <thead>
+        <tr><th>Judul</th><th>Slug</th><th>Status</th><th></th></tr>
+      </thead>
+      <tbody>
+        {
+          programs.map((item) => (
+            <tr>
+              <td>{item.title}</td>
+              <td><code>{item.slug}</code></td>
+              <td>{item.published ? 'Publik' : 'Draft'}</td>
+              <td>
+                <a href={`/admin/programs/${item.id}`}>Edit</a>
+                {' · '}
+                <a href={`/program/${item.slug}`} target="_blank">Lihat</a>
+              </td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+</AdminLayout>

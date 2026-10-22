@@ -1,0 +1,24 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import AdminDetailFields from '../../../components/AdminDetailFields.astro';
+---
+
+<AdminLayout title="Program Baru" active="programs">
+  <form class="form admin-card" method="POST" action="/api/admin/programs" enctype="multipart/form-data">
+    <input type="hidden" name="returnTo" value="/admin/programs" />
+    <label>Judul<input type="text" name="title" required /></label>
+    <label>Urutan tampil<input type="number" name="sortOrder" value="0" /></label>
+    <AdminDetailFields
+      slug=""
+      excerpt=""
+      body=""
+      coverImage=""
+      videoKind="none"
+      videoUrl=""
+      videoPath=""
+      published={true}
+      excerptLabel="Ringkasan (kartu di halaman program)"
+    />
+    <button class="btn btn-primary" type="submit">Simpan program</button>
+  </form>
+</AdminLayout>

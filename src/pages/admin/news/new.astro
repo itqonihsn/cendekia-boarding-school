@@ -1,5 +1,6 @@
 ---
 import AdminLayout from '../../../layouts/AdminLayout.astro';
+import AdminDetailFields from '../../../components/AdminDetailFields.astro';
 
 const today = new Date().toISOString().slice(0, 10);
 ---
@@ -8,32 +9,20 @@ const today = new Date().toISOString().slice(0, 10);
   <form class="form admin-card" method="POST" action="/api/admin/news" enctype="multipart/form-data">
     <input type="hidden" name="returnTo" value="/admin/news" />
     <label>Judul<input type="text" name="title" required /></label>
-    <label>Slug URL (opsional)<input type="text" name="slug" placeholder="auto dari judul" /></label>
     <div class="admin-grid-3">
       <label>Kategori<input type="text" name="category" placeholder="Pendidikan" /></label>
       <label>Tanggal<input type="date" name="publishedAt" value={today} required /></label>
-      <label style="display:flex;align-items:center;gap:.5rem;margin-top:1.6rem">
-        <input type="checkbox" name="published" checked /> Publikasikan
-      </label>
     </div>
-    <label>Ringkasan (excerpt)<textarea name="excerpt" required /></label>
-    <label>
-      Isi lengkap (HTML diperbolehkan: &lt;p&gt;, &lt;h3&gt;, &lt;ul&gt;, &lt;img&gt;, dll.)
-      <textarea name="body" rows="12" required />
-    </label>
-    <div class="admin-grid-2">
-      <label>Path cover<input type="text" name="coverImage" placeholder="/uploads/..." /></label>
-      <label>Upload cover<input type="file" name="coverFile" accept="image/*" /></label>
-    </div>
-    <label>Jenis video
-      <select name="videoKind">
-        <option value="none">Tanpa video</option>
-        <option value="youtube">YouTube (embed URL)</option>
-        <option value="upload">Upload file video</option>
-      </select>
-    </label>
-    <label>URL YouTube<input type="url" name="videoUrl" placeholder="https://www.youtube.com/watch?v=..." /></label>
-    <label>Upload video<input type="file" name="videoFile" accept="video/*" /></label>
+    <AdminDetailFields
+      slug=""
+      excerpt=""
+      body=""
+      coverImage=""
+      videoKind="none"
+      videoUrl=""
+      videoPath=""
+      published={true}
+    />
     <button class="btn btn-primary" type="submit">Simpan berita</button>
   </form>
 </AdminLayout>

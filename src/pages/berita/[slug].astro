@@ -1,14 +1,13 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getNewsBySlug, getSiteSettings } from '../../lib/content';
-import { youtubeEmbedUrl } from '../../lib/youtube';
+import ArticleDetail from '../../components/ArticleDetail.astro';
+import { getNewsBySlug } from '../../lib/content';
 
 const slug = Astro.params.slug!;
 const article = getNewsBySlug(slug);
 if (!article) return Astro.redirect('/berita');
 
-const site = getSiteSettings();
-const embed = article.videoKind === 'youtube' ? youtubeEmbedUrl(article.videoUrl) : null;
+const meta = `${article.category} · ${article.publishedAt}`;
 ---
 
 <BaseLayout
@@ -16,85 +15,15 @@ const embed = article.videoKind === 'youtube' ? youtubeEmbedUrl(article.videoUrl
   description={article.excerpt}
   canonical={`/berita/${article.slug}`}
 >
-  <article class="section">
-    <div class="container article-wrap">
-      <p class="news-meta">
-        <span>{article.category}</span>
-        <time datetime={article.publishedAt}>{article.publishedAt}</time>
-      </p>
-      <h1>{article.title}</h1>
-      {article.coverImage && <img class="article-cover" src={article.coverImage} alt="" />}
-      {embed && (
-        <div class="video-embed">
-          <iframe
-            src={embed}
-            title={article.title}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen
-            loading="lazy"
-          />
-        </div>
-      )}
-      {article.videoKind === 'upload' && article.videoPath && (
-        <video class="article-video" src={article.videoPath} controls preload="metadata" />
-      )}
-      <div class="article-body" set:html={article.body} />
-      <p style="margin-top:2rem">
-        <a class="btn btn-outline-dark" href="/berita">← Kembali ke berita</a>
-      </p>
-    </div>
-  </article>
+  <ArticleDetail
+    title={article.title}
+    meta={meta}
+    coverImage={article.coverImage}
+    videoKind={article.videoKind}
+    videoUrl={article.videoUrl}
+    videoPath={article.videoPath}
+    body={article.body}
+    backHref="/berita"
+    backLabel="← Kembali ke berita"
+  />
 </BaseLayout>
-
-<style>
-  .article-wrap {
-    max-width: 46rem;
-  }
-
-  .article-wrap h1 {
-    font-size: clamp(2rem, 4vw, 2.75rem);
-    margin-bottom: 1rem;
-  }
-
-  .article-cover {
-    width: 100%;
-    border-radius: 1rem;
-    margin: 1rem 0 1.5rem;
-    aspect-ratio: 16/9;
-    object-fit: cover;
-  }
-
-  .video-embed {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 16/9;
-    margin: 1rem 0 1.5rem;
-    border-radius: 1rem;
-    overflow: hidden;
-    background: #000;
-  }
-
-  .video-embed iframe {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    border: 0;
-  }
-
-  .article-video {
-    width: 100%;
-    border-radius: 1rem;
-    margin: 1rem 0 1.5rem;
-  }
-
-  .article-body :global(p) {
-    margin-bottom: 1rem;
-    line-height: 1.7;
-  }
-
-  .article-body :global(img) {
-    max-width: 100%;
-    border-radius: 0.75rem;
-  }
-</style>

@@ -1,0 +1,81 @@
+---
+interface Props {
+  name: string;
+  label: string;
+  value?: string;
+  required?: boolean;
+}
+
+const { name, label, value = '', required = false } = Astro.props;
+const fieldId = `editor-${name}`;
+---
+
+<label class="rich-field">
+  {label}
+  <div id={fieldId} class="quill-mount" data-field={name}></div>
+  <textarea name={name} class="quill-hidden" hidden required={required}>{value}</textarea>
+</label>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" />
+<script is:inline define:vars={{ fieldId, initial: value }}>
+  function initQuill() {
+    const mount = document.getElementById(fieldId);
+    if (!mount || mount.dataset.ready) return;
+    mount.dataset.ready = '1';
+    const form = mount.closest('form');
+    const hidden = form?.querySelector(`textarea[name="${mount.dataset.field}"]`);
+    if (!hidden || typeof Quill === 'undefined') return;
+
+    const quill = new Quill(mount, {
+      theme: 'snow',
+      modules: {
+        toolbar: [
+          [{ header: [2, 3, false] }],
+          ['bold', 'italic', 'underline'],
+          [{ list: 'ordered' }, { list: 'bullet' }],
+          ['link', 'blockquote'],
+          ['clean'],
+        ],
+      },
+    });
+
+    if (initial && initial.trim()) {
+      quill.clipboard.dangerouslyPasteHTML(initial);
+    }
+
+    form?.addEventListener('submit', () => {
+      hidden.value = quill.root.innerHTML;
+    });
+  }
+
+  const s = document.createElement('script');
+  s.src = 'https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js';
+  s.onload = initQuill;
+  document.head.appendChild(s);
+  if (typeof Quill !== 'undefined') initQuill();
+</script>
+
+<style>
+  .rich-field {
+    display: block;
+    margin-bottom: 1rem;
+  }
+
+  .quill-mount {
+    background: #fff;
+    border-radius: 0.75rem;
+    min-height: 200px;
+  }
+
+  .rich-field :global(.ql-toolbar) {
+    border-radius: 0.75rem 0.75rem 0 0;
+    border-color: var(--line);
+  }
+
+  .rich-field :global(.ql-container) {
+    border-radius: 0 0 0.75rem 0.75rem;
+    border-color: var(--line);
+    font-size: 1rem;
+    min-height: 160px;
+  }
+</style>

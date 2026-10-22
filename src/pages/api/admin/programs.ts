@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
-import { deleteProgram, listPrograms, upsertProgram } from '../../../lib/content';
+import { deleteProgram, getProgramById, upsertProgram } from '../../../lib/content';
+import { parsePublished, parseVideoFromForm } from '../../../lib/admin-form';
 import { saveUpload } from '../../../lib/upload';
 
 export const prerender = false;
@@ -7,29 +8,45 @@ export const prerender = false;
 export const POST: APIRoute = async ({ request, redirect }) => {
   const form = await request.formData();
   const action = String(form.get('action') || 'save');
+  const returnTo = String(form.get('returnTo') || '/admin/programs');
 
   if (action === 'delete') {
     const id = Number(form.get('id'));
     if (id) deleteProgram(id);
-    return redirect('/admin/programs?saved=1');
+    return redirect(`${returnTo}?saved=1`);
   }
 
   const id = Number(form.get('id') || 0) || undefined;
-  const existing = id ? listPrograms().find((p) => p.id === id) : undefined;
-  const imageFile = form.get('imageFile');
-  let image = String(form.get('image') || existing?.image || '');
-  if (imageFile instanceof File && imageFile.size > 0) {
-    const uploaded = await saveUpload(imageFile, String(form.get('title') || 'Program'));
+  const existing = id ? getProgramById(id) : null;
+
+  let image = String(form.get('coverImage') || existing?.image || '');
+  const coverFile = form.get('coverFile');
+  if (coverFile instanceof File && coverFile.size > 0) {
+    const uploaded = await saveUpload(coverFile, String(form.get('title') || 'Program'));
     image = uploaded.path;
   }
 
-  upsertProgram({
+  let video = parseVideoFromForm(form, existing ?? undefined);
+  const videoFile = form.get('videoFile');
+  if (video.videoKind === 'upload' && videoFile instanceof File && videoFile.size > 0) {
+    const uploaded = await saveUpload(videoFile, String(form.get('title') || 'Video program'));
+    video = { videoKind: 'upload', videoUrl: '', videoPath: uploaded.path };
+  }
+
+  const newId = upsertProgram({
     id,
+    slug: String(form.get('slug') || ''),
     title: String(form.get('title') || ''),
-    description: String(form.get('description') || ''),
+    description: String(form.get('excerpt') || ''),
+    body: String(form.get('body') || ''),
     image,
-    sortOrder: Number(form.get('sortOrder') || 0),
+    videoKind: video.videoKind,
+    videoUrl: video.videoUrl,
+    videoPath: video.videoPath,
+    published: parsePublished(form),
+    sortOrder: Number(form.get('sortOrder') || existing?.sortOrder || 0),
   });
 
-  return redirect('/admin/programs?saved=1');
+  const dest = id ? returnTo : `/admin/programs/${newId}?saved=1`;
+  return redirect(dest);
 };

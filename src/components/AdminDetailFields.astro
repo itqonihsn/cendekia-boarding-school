@@ -1,0 +1,57 @@
+---
+import AdminRichEditor from './AdminRichEditor.astro';
+import type { VideoKind } from '../lib/types';
+
+interface Props {
+  slug: string;
+  excerpt: string;
+  body: string;
+  coverImage: string;
+  videoKind: VideoKind;
+  videoUrl: string;
+  videoPath: string;
+  published: boolean;
+  excerptLabel?: string;
+  showPublished?: boolean;
+}
+
+const {
+  slug,
+  excerpt,
+  body,
+  coverImage,
+  videoKind,
+  videoUrl,
+  videoPath,
+  published,
+  excerptLabel = 'Ringkasan (tampil di daftar)',
+  showPublished = true,
+} = Astro.props;
+---
+
+<label>Slug URL (opsional)<input type="text" name="slug" value={slug} placeholder="auto dari judul" /></label>
+<label>{excerptLabel}<textarea name="excerpt" required rows="3">{excerpt}</textarea></label>
+<AdminRichEditor name="body" label="Deskripsi lengkap" value={body} required />
+<div class="admin-grid-2">
+  <label>Path foto sampul<input type="text" name="coverImage" value={coverImage} placeholder="/uploads/..." /></label>
+  <label>Upload foto<input type="file" name="coverFile" accept="image/*" /></label>
+</div>
+{coverImage && <img src={coverImage} alt="" width="160" style="border-radius:.5rem;margin-bottom:1rem" />}
+<label>Jenis video
+  <select name="videoKind">
+    <option value="none" selected={videoKind === 'none'}>Tanpa video</option>
+    <option value="youtube" selected={videoKind === 'youtube'}>YouTube</option>
+    <option value="upload" selected={videoKind === 'upload'}>Upload file</option>
+  </select>
+</label>
+<label>URL YouTube<input type="url" name="videoUrl" value={videoUrl} placeholder="https://www.youtube.com/watch?v=..." /></label>
+<input type="hidden" name="videoPath" value={videoPath} />
+<label>Upload video baru<input type="file" name="videoFile" accept="video/*" /></label>
+{videoPath && <video src={videoPath} controls style="max-width:320px;margin-bottom:1rem" />}
+{
+  showPublished && (
+    <label style="display:flex;align-items:center;gap:.5rem">
+      <input type="checkbox" name="published" checked={published} /> Tampilkan di website publik
+    </label>
+  )
+}

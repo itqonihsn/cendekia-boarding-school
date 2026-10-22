@@ -1,0 +1,33 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import { listFacilities } from '../../../lib/content';
+
+const facilities = listFacilities();
+---
+
+<AdminLayout title="Fasilitas" active="facilities">
+  <p><a class="btn btn-primary" href="/admin/facilities/new">+ Tambah fasilitas</a></p>
+  <div class="admin-card" style="margin-top:1rem">
+    <table class="admin-table">
+      <thead>
+        <tr><th>Judul</th><th>Slug</th><th>Status</th><th></th></tr>
+      </thead>
+      <tbody>
+        {
+          facilities.map((item) => (
+            <tr>
+              <td>{item.title}</td>
+              <td><code>{item.slug}</code></td>
+              <td>{item.published ? 'Publik' : 'Draft'}</td>
+              <td>
+                <a href={`/admin/facilities/${item.id}`}>Edit</a>
+                {' · '}
+                <a href={`/fasilitas/${item.slug}`} target="_blank">Lihat</a>
+              </td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+</AdminLayout>

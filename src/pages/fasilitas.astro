@@ -4,7 +4,7 @@ import { getPageHero, getSiteSettings, listFacilities } from '../lib/content';
 
 const site = getSiteSettings();
 const hero = getPageHero('fasilitas');
-const facilities = listFacilities();
+const facilities = listFacilities(true);
 ---
 
 <BaseLayout
@@ -27,8 +27,9 @@ const facilities = listFacilities();
             <article class="feature-item">
               {item.image && <img src={item.image} alt="" class="feature-thumb" loading="lazy" />}
               <div class="feature-icon">{String(i + 1).padStart(2, '0')}</div>
-              <h3>{item.title}</h3>
+              <h3><a href={`/fasilitas/${item.slug}`}>{item.title}</a></h3>
               <p>{item.description}</p>
+              <p><a class="btn btn-outline-dark" href={`/fasilitas/${item.slug}`}>Detail fasilitas</a></p>
             </article>
           ))
         }

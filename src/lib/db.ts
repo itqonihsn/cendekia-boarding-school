@@ -11,6 +11,16 @@ import {
 } from './defaults';
 import { getDbPath } from './paths';
 
+function slugifyLocal(text: string): string {
+  return text
+    .toLowerCase()
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 80);
+}
+
 let db: DatabaseSync | null = null;
 
 function migrate(database: DatabaseSync) {
@@ -70,6 +80,49 @@ function migrate(database: DatabaseSync) {
       password_hash TEXT NOT NULL
     );
   `);
+  upgradeDetailTables(database);
+}
+
+function columnExists(database: DatabaseSync, table: string, column: string): boolean {
+  const rows = database.prepare(`PRAGMA table_info(${table})`).all() as { name: string }[];
+  return rows.some((r) => r.name === column);
+}
+
+function upgradeDetailTables(database: DatabaseSync) {
+  const add = (table: string, column: string, ddl: string) => {
+    if (!columnExists(database, table, column)) {
+      database.exec(`ALTER TABLE ${table} ADD COLUMN ${column} ${ddl}`);
+    }
+  };
+
+  for (const table of ['programs', 'facilities'] as const) {
+    add(table, 'slug', 'TEXT NOT NULL DEFAULT ""');
+    add(table, 'body', 'TEXT NOT NULL DEFAULT ""');
+    add(table, 'video_kind', "TEXT NOT NULL DEFAULT 'none'");
+    add(table, 'video_url', 'TEXT NOT NULL DEFAULT ""');
+    add(table, 'video_path', 'TEXT NOT NULL DEFAULT ""');
+    add(table, 'published', 'INTEGER NOT NULL DEFAULT 1');
+  }
+
+  for (const table of ['programs', 'facilities'] as const) {
+    const rows = database.prepare(`SELECT id, title, slug, description, body FROM ${table}`).all() as {
+      id: number;
+      title: string;
+      slug: string;
+      description: string;
+      body: string;
+    }[];
+    for (const row of rows) {
+      let slug = row.slug;
+      if (!slug) {
+        slug = `${slugifyLocal(row.title)}-${row.id}`;
+        database.prepare(`UPDATE ${table} SET slug = ? WHERE id = ?`).run(slug, row.id);
+      }
+      if (!row.body && row.description) {
+        database.prepare(`UPDATE ${table} SET body = ? WHERE id = ?`).run(`<p>${row.description}</p>`, row.id);
+      }
+    }
+  }
 }
 
 function setJson(database: DatabaseSync, key: string, value: unknown) {

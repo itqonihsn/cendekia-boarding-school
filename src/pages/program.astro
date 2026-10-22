@@ -4,7 +4,7 @@ import { getPageHero, getSiteSettings, listPrograms } from '../lib/content';
 
 const site = getSiteSettings();
 const hero = getPageHero('program');
-const programs = listPrograms();
+const programs = listPrograms(true);
 ---
 
 <BaseLayout
@@ -27,8 +27,9 @@ const programs = listPrograms();
             <article class="feature-item">
               {item.image && <img src={item.image} alt="" class="feature-thumb" loading="lazy" />}
               <div class="feature-icon">{String(i + 1).padStart(2, '0')}</div>
-              <h3>{item.title}</h3>
+              <h3><a href={`/program/${item.slug}`}>{item.title}</a></h3>
               <p>{item.description}</p>
+              <p><a class="btn btn-outline-dark" href={`/program/${item.slug}`}>Detail program</a></p>
             </article>
           ))
         }

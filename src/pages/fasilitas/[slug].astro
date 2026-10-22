@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleDetail from '../../components/ArticleDetail.astro';
+import { getFacilityBySlug } from '../../lib/content';
+
+const slug = Astro.params.slug!;
+const item = getFacilityBySlug(slug);
+if (!item) return Astro.redirect('/fasilitas');
+
+---
+
+<BaseLayout title={item.title} description={item.description} canonical={`/fasilitas/${item.slug}`}>
+  <ArticleDetail
+    title={item.title}
+    meta="Fasilitas Pesantren"
+    coverImage={item.image}
+    videoKind={item.videoKind}
+    videoUrl={item.videoUrl}
+    videoPath={item.videoPath}
+    body={item.body}
+    backHref="/fasilitas"
+    backLabel="← Kembali ke fasilitas"
+  />
+</BaseLayout>

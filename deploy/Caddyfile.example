@@ -1,10 +1,11 @@
 # Cendekia Boarding School — Astro SSR + admin CMS
 #
-# Caddy SNAP (Ubuntu): edit file INI (bukan hanya .../current/Caddyfile):
-#   sudo nano /var/snap/caddy/common/caddy/Caddyfile
-# Lalu:
-#   sudo snap run caddy validate --config /var/snap/caddy/common/caddy/Caddyfile
-#   sudo snap restart caddy
+# Caddy SNAP: `validate` saja TIDAK cukup — service pakai JSON dari:
+#   sudo snap set caddy config='...'
+# Workflow:
+#   sudo mkdir -p /var/snap/caddy/common/caddy
+#   sudo nano /var/snap/caddy/common/caddy/Caddyfile   # isi di bawah
+#   bash deploy/fix-caddy-snap.sh   (di VPS, dari repo atau copy script)
 #
 # WAJIB: PM2 menjalankan Node di 127.0.0.1:4321
 

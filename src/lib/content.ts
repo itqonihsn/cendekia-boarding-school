@@ -49,21 +49,35 @@ export function savePageHero(key: keyof typeof defaultPageHero, value: PageHero)
 }
 
 function mapProgram(row: Record<string, unknown>): ProgramItem {
+  const id = row.id as number;
   return {
-    id: row.id as number,
+    id,
+    slug: (row.slug as string) || `${slugify(String(row.title))}-${id}`,
     title: row.title as string,
     description: row.description as string,
+    body: (row.body as string) || '',
     image: row.image as string,
+    videoKind: (row.video_kind as ProgramItem['videoKind']) || 'none',
+    videoUrl: (row.video_url as string) || '',
+    videoPath: (row.video_path as string) || '',
+    published: row.published === undefined ? true : Boolean(row.published),
     sortOrder: row.sort_order as number,
   };
 }
 
 function mapFacility(row: Record<string, unknown>): FacilityItem {
+  const id = row.id as number;
   return {
-    id: row.id as number,
+    id,
+    slug: (row.slug as string) || `${slugify(String(row.title))}-${id}`,
     title: row.title as string,
     description: row.description as string,
+    body: (row.body as string) || '',
     image: row.image as string,
+    videoKind: (row.video_kind as FacilityItem['videoKind']) || 'none',
+    videoUrl: (row.video_url as string) || '',
+    videoPath: (row.video_path as string) || '',
+    published: row.published === undefined ? true : Boolean(row.published),
     sortOrder: row.sort_order as number,
   };
 }
@@ -97,23 +111,69 @@ function mapMedia(row: Record<string, unknown>): MediaItem {
   };
 }
 
-export function listPrograms(): ProgramItem[] {
+export function listPrograms(publishedOnly = false): ProgramItem[] {
   const db = getDb();
-  const rows = db.prepare(`SELECT * FROM programs ORDER BY sort_order ASC, id ASC`).all();
+  const sql = publishedOnly
+    ? `SELECT * FROM programs WHERE published = 1 ORDER BY sort_order ASC, id ASC`
+    : `SELECT * FROM programs ORDER BY sort_order ASC, id ASC`;
+  const rows = db.prepare(sql).all();
   return rows.map((r) => mapProgram(r as Record<string, unknown>));
 }
 
-export function upsertProgram(input: Partial<ProgramItem> & { title: string; description: string }) {
+export function getProgramBySlug(slug: string): ProgramItem | null {
   const db = getDb();
+  const row = db.prepare(`SELECT * FROM programs WHERE slug = ? AND published = 1`).get(slug);
+  return row ? mapProgram(row as Record<string, unknown>) : null;
+}
+
+export function getProgramById(id: number): ProgramItem | null {
+  const db = getDb();
+  const row = db.prepare(`SELECT * FROM programs WHERE id = ?`).get(id);
+  return row ? mapProgram(row as Record<string, unknown>) : null;
+}
+
+export function upsertProgram(
+  input: Partial<ProgramItem> & { title: string; description: string; body: string },
+) {
+  const db = getDb();
+  const slug = input.slug?.trim() || slugify(input.title);
+  const videoKind = input.videoKind || 'none';
+
   if (input.id) {
     db.prepare(
-      `UPDATE programs SET title = ?, description = ?, image = ?, sort_order = ? WHERE id = ?`,
-    ).run(input.title, input.description, input.image ?? '', input.sortOrder ?? 0, input.id);
+      `UPDATE programs SET slug = ?, title = ?, description = ?, body = ?, image = ?, video_kind = ?, video_url = ?, video_path = ?, published = ?, sort_order = ? WHERE id = ?`,
+    ).run(
+      slug,
+      input.title,
+      input.description,
+      input.body,
+      input.image ?? '',
+      videoKind,
+      input.videoUrl ?? '',
+      input.videoPath ?? '',
+      input.published === false ? 0 : 1,
+      input.sortOrder ?? 0,
+      input.id,
+    );
     return input.id;
   }
   const result = db
-    .prepare(`INSERT INTO programs (title, description, image, sort_order) VALUES (?, ?, ?, ?)`)
-    .run(input.title, input.description, input.image ?? '', input.sortOrder ?? 999);
+    .prepare(
+      `INSERT INTO programs (slug, title, description, body, image, video_kind, video_url, video_path, published, sort_order)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    )
+    .run(
+      slug,
+      input.title,
+      input.description,
+      input.body,
+      input.image ?? '',
+      videoKind,
+      input.videoUrl ?? '',
+      input.videoPath ?? '',
+      input.published === false ? 0 : 1,
+      input.sortOrder ?? 999,
+    );
   return Number(result.lastInsertRowid);
 }
 
@@ -121,23 +181,69 @@ export function deleteProgram(id: number) {
   getDb().prepare(`DELETE FROM programs WHERE id = ?`).run(id);
 }
 
-export function listFacilities(): FacilityItem[] {
+export function listFacilities(publishedOnly = false): FacilityItem[] {
   const db = getDb();
-  const rows = db.prepare(`SELECT * FROM facilities ORDER BY sort_order ASC, id ASC`).all();
+  const sql = publishedOnly
+    ? `SELECT * FROM facilities WHERE published = 1 ORDER BY sort_order ASC, id ASC`
+    : `SELECT * FROM facilities ORDER BY sort_order ASC, id ASC`;
+  const rows = db.prepare(sql).all();
   return rows.map((r) => mapFacility(r as Record<string, unknown>));
 }
 
-export function upsertFacility(input: Partial<FacilityItem> & { title: string; description: string }) {
+export function getFacilityBySlug(slug: string): FacilityItem | null {
   const db = getDb();
+  const row = db.prepare(`SELECT * FROM facilities WHERE slug = ? AND published = 1`).get(slug);
+  return row ? mapFacility(row as Record<string, unknown>) : null;
+}
+
+export function getFacilityById(id: number): FacilityItem | null {
+  const db = getDb();
+  const row = db.prepare(`SELECT * FROM facilities WHERE id = ?`).get(id);
+  return row ? mapFacility(row as Record<string, unknown>) : null;
+}
+
+export function upsertFacility(
+  input: Partial<FacilityItem> & { title: string; description: string; body: string },
+) {
+  const db = getDb();
+  const slug = input.slug?.trim() || slugify(input.title);
+  const videoKind = input.videoKind || 'none';
+
   if (input.id) {
     db.prepare(
-      `UPDATE facilities SET title = ?, description = ?, image = ?, sort_order = ? WHERE id = ?`,
-    ).run(input.title, input.description, input.image ?? '', input.sortOrder ?? 0, input.id);
+      `UPDATE facilities SET slug = ?, title = ?, description = ?, body = ?, image = ?, video_kind = ?, video_url = ?, video_path = ?, published = ?, sort_order = ? WHERE id = ?`,
+    ).run(
+      slug,
+      input.title,
+      input.description,
+      input.body,
+      input.image ?? '',
+      videoKind,
+      input.videoUrl ?? '',
+      input.videoPath ?? '',
+      input.published === false ? 0 : 1,
+      input.sortOrder ?? 0,
+      input.id,
+    );
     return input.id;
   }
   const result = db
-    .prepare(`INSERT INTO facilities (title, description, image, sort_order) VALUES (?, ?, ?, ?)`)
-    .run(input.title, input.description, input.image ?? '', input.sortOrder ?? 999);
+    .prepare(
+      `INSERT INTO facilities (slug, title, description, body, image, video_kind, video_url, video_path, published, sort_order)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    )
+    .run(
+      slug,
+      input.title,
+      input.description,
+      input.body,
+      input.image ?? '',
+      videoKind,
+      input.videoUrl ?? '',
+      input.videoPath ?? '',
+      input.published === false ? 0 : 1,
+      input.sortOrder ?? 999,
+    );
   return Number(result.lastInsertRowid);
 }
 

@@ -63,19 +63,33 @@ export type TentangContent = {
   values: TentangValue[];
 };
 
+export type VideoKind = 'none' | 'youtube' | 'upload';
+
 export type ProgramItem = {
   id: number;
+  slug: string;
   title: string;
   description: string;
+  body: string;
   image: string;
+  videoKind: VideoKind;
+  videoUrl: string;
+  videoPath: string;
+  published: boolean;
   sortOrder: number;
 };
 
 export type FacilityItem = {
   id: number;
+  slug: string;
   title: string;
   description: string;
+  body: string;
   image: string;
+  videoKind: VideoKind;
+  videoUrl: string;
+  videoPath: string;
+  published: boolean;
   sortOrder: number;
 };
 
@@ -88,7 +102,7 @@ export type NewsItem = {
   excerpt: string;
   body: string;
   coverImage: string;
-  videoKind: 'none' | 'youtube' | 'upload';
+  videoKind: VideoKind;
   videoUrl: string;
   videoPath: string;
   published: boolean;

@@ -9,7 +9,7 @@ import {
 
 const site = getSiteSettings();
 const home = getHomeContent();
-const programs = listPrograms();
+const programs = listPrograms(true);
 const news = listNews(true).slice(0, 3);
 const heroHasPhoto = Boolean(home.heroImage);
 ---
@@ -94,7 +94,7 @@ const heroHasPhoto = Boolean(home.heroImage);
             <article class="feature-item">
               {item.image && <img src={item.image} alt="" class="feature-thumb" loading="lazy" />}
               <div class="feature-icon">{String(i + 1).padStart(2, '0')}</div>
-              <h3>{item.title}</h3>
+              <h3><a href={`/program/${item.slug}`}>{item.title}</a></h3>
               <p>{item.description}</p>
             </article>
           ))

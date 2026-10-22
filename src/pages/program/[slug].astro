@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleDetail from '../../components/ArticleDetail.astro';
+import { getProgramBySlug } from '../../lib/content';
+
+const slug = Astro.params.slug!;
+const item = getProgramBySlug(slug);
+if (!item) return Astro.redirect('/program');
+
+---
+
+<BaseLayout title={item.title} description={item.description} canonical={`/program/${item.slug}`}>
+  <ArticleDetail
+    title={item.title}
+    meta="Program Pendidikan"
+    coverImage={item.image}
+    videoKind={item.videoKind}
+    videoUrl={item.videoUrl}
+    videoPath={item.videoPath}
+    body={item.body}
+    backHref="/program"
+    backLabel="← Kembali ke program"
+  />
+</BaseLayout>
