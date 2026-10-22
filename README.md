@@ -66,7 +66,16 @@ sudo chown -R $USER:$USER /var/www/cendekia-boarding-school /var/www/cendekia-da
 npm install -g pm2
 ```
 
-Nginx reverse proxy ke Node (port 4321):
+**Penting:** VPS Anda memakai **Caddy** (`server: Caddy` di header HTTP). Jangan pakai `file_server` + `index.html` — semua request harus ke Node:
+
+```text
+# deploy/Caddyfile.example
+reverse_proxy 127.0.0.1:4321
+```
+
+Tanpa ini, `/admin/login` akan menampilkan **beranda** (fallback file lama).
+
+Nginx (alternatif) reverse proxy ke Node (port 4321):
 
 ```bash
 sudo cp deploy/nginx.conf.example /etc/nginx/sites-available/cendekia

@@ -1,0 +1,15 @@
+# Cendekia Boarding School — Astro SSR + admin CMS
+# Salin ke Caddy (sesuaikan path situs Anda), lalu: caddy reload
+#
+# WAJIB: PM2 menjalankan Node di 127.0.0.1:4321 (lihat ecosystem.config.cjs)
+
+cendekiaboardingschool.id, www.cendekiaboardingschool.id {
+	encode gzip zstd
+
+	# Upload video/foto admin (maks. 100MB, selaras dengan Nginx example)
+	request_body {
+		max_size 100MB
+	}
+
+	reverse_proxy 127.0.0.1:4321
+}

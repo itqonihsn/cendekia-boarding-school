@@ -71,6 +71,8 @@ jobs:
             test -n "${SESSION_SECRET:-}"
 
             mkdir -p "$WEB_DIR" "$DATA_DIR/uploads"
+            # Hapus sisa deploy static lama (index.html dll.) agar /admin/* tidak fallback ke beranda
+            find "$WEB_DIR" -mindepth 1 -maxdepth 1 -exec rm -rf {} +
             tar xzf /tmp/cendekia-web/website-dist.tgz -C "$WEB_DIR"
             rm -f /tmp/cendekia-web/website-dist.tgz
 
@@ -96,6 +98,8 @@ jobs:
             fi
 
             echo "=== DEPLOY OK (${{ github.sha }}) app=$WEB_DIR data=$DATA_DIR ==="
+            echo "NOTE: Reverse proxy (Caddy/Nginx) harus arahkan ke 127.0.0.1:4321 — lihat deploy/Caddyfile.example"
+            curl -sf -o /dev/null http://127.0.0.1:4321/admin/login && echo "Node /admin/login OK" || echo "WARN: Node tidak merespons di :4321"
 
         env:
           SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
