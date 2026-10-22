@@ -1,0 +1,41 @@
+---
+import '../../styles/global.css';
+import '../../styles/admin.css';
+import { getSession } from '../../lib/auth';
+
+if (getSession(Astro.cookies)) {
+  return Astro.redirect('/admin');
+}
+
+const error = Astro.url.searchParams.get('error');
+---
+
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Login Admin · CBS</title>
+  </head>
+  <body>
+    <div class="admin-login-wrap">
+      <div class="admin-card admin-login-card">
+        <h1 style="margin-top:0">Login Admin</h1>
+        <p style="color:var(--muted)">Kelola konten website Cendekia Boarding School.</p>
+        {error && <div class="admin-flash error">{error}</div>}
+        <form class="form" method="POST" action="/api/admin/login">
+          <label>
+            Username
+            <input type="text" name="username" required autocomplete="username" />
+          </label>
+          <label>
+            Password
+            <input type="password" name="password" required autocomplete="current-password" />
+          </label>
+          <button class="btn btn-primary" type="submit">Masuk</button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

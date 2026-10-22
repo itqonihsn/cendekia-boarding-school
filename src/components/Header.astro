@@ -1,5 +1,12 @@
 ---
-import { nav, site } from '../data/site';
+import { nav } from '../data/site';
+import type { SiteSettings } from '../lib/types';
+
+interface Props {
+  site: SiteSettings;
+}
+
+const { site } = Astro.props;
 
 const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
 

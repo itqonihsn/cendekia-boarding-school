@@ -1,6 +1,10 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { facilities, site } from '../data/site';
+import { getPageHero, getSiteSettings, listFacilities } from '../lib/content';
+
+const site = getSiteSettings();
+const hero = getPageHero('fasilitas');
+const facilities = listFacilities();
 ---
 
 <BaseLayout
@@ -9,9 +13,9 @@ import { facilities, site } from '../data/site';
 >
   <section class="page-hero">
     <div class="container">
-      <span class="eyebrow">Lingkungan Belajar</span>
-      <h1>Fasilitas Pesantren</h1>
-      <p>Sarana yang mendukung ibadah, belajar, istirahat, dan pengembangan potensi santri.</p>
+      <span class="eyebrow">{hero.eyebrow}</span>
+      <h1>{hero.title}</h1>
+      <p>{hero.subtitle}</p>
     </div>
   </section>
 
@@ -21,9 +25,10 @@ import { facilities, site } from '../data/site';
         {
           facilities.map((item, i) => (
             <article class="feature-item">
+              {item.image && <img src={item.image} alt="" class="feature-thumb" loading="lazy" />}
               <div class="feature-icon">{String(i + 1).padStart(2, '0')}</div>
               <h3>{item.title}</h3>
-              <p>{item.desc}</p>
+              <p>{item.description}</p>
             </article>
           ))
         }
@@ -31,3 +36,13 @@ import { facilities, site } from '../data/site';
     </div>
   </section>
 </BaseLayout>
+
+<style>
+  .feature-thumb {
+    width: 100%;
+    border-radius: 0.75rem;
+    margin-bottom: 0.75rem;
+    aspect-ratio: 16/10;
+    object-fit: cover;
+  }
+</style>

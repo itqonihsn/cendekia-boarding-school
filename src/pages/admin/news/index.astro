@@ -1,0 +1,36 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import { listNews } from '../../../lib/content';
+
+const news = listNews();
+---
+
+<AdminLayout title="Berita & Kegiatan" active="news">
+  <p><a class="btn btn-primary" href="/admin/news/new">+ Tulis berita baru</a></p>
+  <div class="admin-card" style="margin-top:1rem">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Judul</th>
+          <th>Kategori</th>
+          <th>Tanggal</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          news.map((item) => (
+            <tr>
+              <td>{item.title}</td>
+              <td>{item.category}</td>
+              <td>{item.publishedAt}</td>
+              <td>{item.published ? 'Publik' : 'Draft'}</td>
+              <td><a href={`/admin/news/${item.id}`}>Edit</a></td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+</AdminLayout>

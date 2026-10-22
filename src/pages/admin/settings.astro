@@ -1,0 +1,42 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { getSiteSettings } from '../../lib/content';
+
+const site = getSiteSettings();
+---
+
+<AdminLayout title="Pengaturan Situs" active="settings">
+  <form class="form admin-card" method="POST" action="/api/admin/settings" enctype="multipart/form-data">
+    <div class="admin-grid-2">
+      <label>Nama lembaga<input type="text" name="name" value={site.name} required /></label>
+      <label>Nama singkat<input type="text" name="shortName" value={site.shortName} required /></label>
+      <label>Nama lengkap<input type="text" name="fullName" value={site.fullName} required /></label>
+      <label>Yayasan<input type="text" name="foundation" value={site.foundation} required /></label>
+      <label>Tagline<textarea name="tagline">{site.tagline}</textarea></label>
+      <label>Domain (canonical)<input type="url" name="domain" value={site.domain} /></label>
+      <label>Email<input type="email" name="email" value={site.email} required /></label>
+      <label>Telepon<input type="text" name="phone" value={site.phone} required /></label>
+      <label>Alamat<input type="text" name="address" value={site.address} required /></label>
+      <label>Jam layanan<input type="text" name="hours" value={site.hours} required /></label>
+    </div>
+    <hr style="margin:1.25rem 0;border:none;border-top:1px solid var(--line)" />
+    <div class="admin-grid-2">
+      <label>
+        Logo (path saat ini)
+        <input type="text" name="logo" value={site.logo} />
+      </label>
+      <label>
+        Upload logo baru
+        <input type="file" name="logoFile" accept="image/*" />
+      </label>
+    </div>
+    {site.logo && (
+      <p style="margin-top:1rem">
+        <img src={site.logo} alt="Logo saat ini" width="96" height="96" style="object-fit:contain;background:#fff;border-radius:50%;padding:.25rem;border:1px solid var(--line)" />
+      </p>
+    )}
+    <p style="margin-top:1.25rem">
+      <button class="btn btn-primary" type="submit">Simpan pengaturan</button>
+    </p>
+  </form>
+</AdminLayout>

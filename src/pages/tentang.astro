@@ -1,6 +1,9 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { site } from '../data/site';
+import { getSiteSettings, getTentangContent } from '../lib/content';
+
+const site = getSiteSettings();
+const t = getTentangContent();
 ---
 
 <BaseLayout
@@ -9,9 +12,9 @@ import { site } from '../data/site';
 >
   <section class="page-hero">
     <div class="container">
-      <span class="eyebrow">Profil Lembaga</span>
-      <h1>Tentang Kami</h1>
-      <p>Mengenal lebih dekat semangat, arah, dan nilai yang menjiwai {site.name}.</p>
+      <span class="eyebrow">{t.hero.eyebrow}</span>
+      <h1>{t.hero.title}</h1>
+      <p>{t.hero.subtitle}</p>
     </div>
   </section>
 
@@ -19,14 +22,10 @@ import { site } from '../data/site';
     <div class="container split">
       <div>
         <div class="section-head">
-          <span class="eyebrow">Siapa Kami</span>
-          <h2>Memadukan Tradisi Pesantren &amp; Pendidikan Modern</h2>
-          <p class="lead">
-            Kami adalah rumah belajar bagi generasi muslim yang ingin tumbuh dalam ilmu, iman, dan
-            akhlak. Pendekatan boarding membuat pembinaan berlangsung utuh — di kelas maupun dalam
-            kehidupan sehari-hari.
-          </p>
-          <p class="lead"><strong>{site.foundation}</strong> mengelola {site.fullName}.</p>
+          <span class="eyebrow">{t.whoEyebrow}</span>
+          <h2>{t.whoTitle}</h2>
+          <p class="lead">{t.whoLead}</p>
+          <p class="lead"><strong>{t.whoFoundationNote}</strong></p>
         </div>
       </div>
       <div class="panel" role="img" aria-label="Logo Cendekia Boarding School">
@@ -38,19 +37,13 @@ import { site } from '../data/site';
   <section class="section" style="padding-top:0">
     <div class="container info-grid">
       <article class="info-item">
-        <h3>Visi</h3>
-        <p>
-          Menjadi pesantren unggulan yang mencetak generasi muslim berilmu, berakhlak karimah, dan
-          berdaya saing global.
-        </p>
+        <h3>{t.visionTitle}</h3>
+        <p>{t.visionText}</p>
       </article>
       <article class="info-item">
-        <h3>Misi</h3>
+        <h3>{t.missionTitle}</h3>
         <ul class="check-list">
-          <li>Menyelenggarakan pendidikan Islam yang utuh dan relevan</li>
-          <li>Membangun budaya Qur’ani dalam kehidupan santri</li>
-          <li>Mengembangkan potensi akademik dan non-akademik</li>
-          <li>Menumbuhkan kemandirian, kepemimpinan, dan kepedulian sosial</li>
+          {t.missionItems.map((item) => <li>{item}</li>)}
         </ul>
       </article>
     </div>
@@ -59,25 +52,19 @@ import { site } from '../data/site';
   <section class="section" style="padding-top:0">
     <div class="container">
       <div class="section-head center">
-        <span class="eyebrow">Nilai Inti</span>
-        <h2>Iman · Ilmu · Akhlak</h2>
+        <span class="eyebrow">{t.valuesEyebrow}</span>
+        <h2>{t.valuesTitle}</h2>
       </div>
       <div class="feature-grid">
-        <article class="feature-item">
-          <div class="feature-icon">I</div>
-          <h3>Iman</h3>
-          <p>Setiap aktivitas diarahkan untuk memperkokoh keimanan dan ketakwaan.</p>
-        </article>
-        <article class="feature-item">
-          <div class="feature-icon">II</div>
-          <h3>Ilmu</h3>
-          <p>Belajar menjadi budaya, bukan sekadar kewajiban formal.</p>
-        </article>
-        <article class="feature-item">
-          <div class="feature-icon">III</div>
-          <h3>Akhlak</h3>
-          <p>Adab menjadi mahkota ilmu dalam interaksi santri, guru, dan masyarakat.</p>
-        </article>
+        {
+          t.values.map((v) => (
+            <article class="feature-item">
+              <div class="feature-icon">{v.label}</div>
+              <h3>{v.title}</h3>
+              <p>{v.desc}</p>
+            </article>
+          ))
+        }
       </div>
     </div>
   </section>

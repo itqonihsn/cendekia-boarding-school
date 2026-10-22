@@ -1,6 +1,10 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { programs, site } from '../data/site';
+import { getPageHero, getSiteSettings, listPrograms } from '../lib/content';
+
+const site = getSiteSettings();
+const hero = getPageHero('program');
+const programs = listPrograms();
 ---
 
 <BaseLayout
@@ -9,9 +13,9 @@ import { programs, site } from '../data/site';
 >
   <section class="page-hero">
     <div class="container">
-      <span class="eyebrow">Kurikulum &amp; Kegiatan</span>
-      <h1>Program Pendidikan</h1>
-      <p>Rangkaian program yang membentuk santri secara utuh — spiritual, intelektual, dan karakter.</p>
+      <span class="eyebrow">{hero.eyebrow}</span>
+      <h1>{hero.title}</h1>
+      <p>{hero.subtitle}</p>
     </div>
   </section>
 
@@ -21,9 +25,10 @@ import { programs, site } from '../data/site';
         {
           programs.map((item, i) => (
             <article class="feature-item">
+              {item.image && <img src={item.image} alt="" class="feature-thumb" loading="lazy" />}
               <div class="feature-icon">{String(i + 1).padStart(2, '0')}</div>
               <h3>{item.title}</h3>
-              <p>{item.desc}</p>
+              <p>{item.description}</p>
             </article>
           ))
         }
@@ -34,3 +39,13 @@ import { programs, site } from '../data/site';
     </div>
   </section>
 </BaseLayout>
+
+<style>
+  .feature-thumb {
+    width: 100%;
+    border-radius: 0.75rem;
+    margin-bottom: 0.75rem;
+    aspect-ratio: 16/10;
+    object-fit: cover;
+  }
+</style>

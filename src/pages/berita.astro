@@ -1,6 +1,10 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { news, site } from '../data/site';
+import { getPageHero, getSiteSettings, listNews } from '../lib/content';
+
+const site = getSiteSettings();
+const hero = getPageHero('berita');
+const news = listNews(true);
 ---
 
 <BaseLayout
@@ -9,9 +13,9 @@ import { news, site } from '../data/site';
 >
   <section class="page-hero">
     <div class="container">
-      <span class="eyebrow">Informasi Terkini</span>
-      <h1>Berita &amp; Kegiatan</h1>
-      <p>Update kegiatan pendidikan, keagamaan, dan prestasi santri.</p>
+      <span class="eyebrow">{hero.eyebrow}</span>
+      <h1>{hero.title}</h1>
+      <p>{hero.subtitle}</p>
     </div>
   </section>
 
@@ -21,12 +25,14 @@ import { news, site } from '../data/site';
         {
           news.map((item) => (
             <article class="news-item" id={item.slug}>
+              {item.coverImage && <img src={item.coverImage} alt="" class="news-cover" loading="lazy" />}
               <div class="news-meta">
                 <span>{item.category}</span>
-                <time datetime={item.date}>{item.date}</time>
+                <time datetime={item.publishedAt}>{item.publishedAt}</time>
               </div>
-              <h3>{item.title}</h3>
+              <h3><a href={`/berita/${item.slug}`}>{item.title}</a></h3>
               <p>{item.excerpt}</p>
+              <p><a class="btn btn-outline-dark" href={`/berita/${item.slug}`}>Baca selengkapnya</a></p>
             </article>
           ))
         }
@@ -34,3 +40,13 @@ import { news, site } from '../data/site';
     </div>
   </section>
 </BaseLayout>
+
+<style>
+  .news-cover {
+    width: 100%;
+    border-radius: 0.75rem;
+    margin-bottom: 0.75rem;
+    aspect-ratio: 16/10;
+    object-fit: cover;
+  }
+</style>

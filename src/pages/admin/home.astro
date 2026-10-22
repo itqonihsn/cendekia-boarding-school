@@ -1,0 +1,54 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { getHomeContent } from '../../lib/content';
+
+const home = getHomeContent();
+---
+
+<AdminLayout title="Kelola Beranda" active="home">
+  <form class="form admin-card" method="POST" action="/api/admin/home" enctype="multipart/form-data">
+    <h2 style="margin-top:0">Hero</h2>
+    <div class="admin-grid-2">
+      <label>Judul (sebelum emphasis)<input type="text" name="heroTitle" value={home.heroTitle} required /></label>
+      <label>Kata emphasis (warna kuning)<input type="text" name="heroEmphasis" value={home.heroEmphasis} required /></label>
+    </div>
+    <label>Paragraf hero<textarea name="heroLead">{home.heroLead}</textarea></label>
+    <div class="admin-grid-2">
+      <label>Background image (path)<input type="text" name="heroImage" value={home.heroImage} placeholder="/uploads/..." /></label>
+      <label>Upload background hero<input type="file" name="heroImageFile" accept="image/*" /></label>
+    </div>
+
+    <h2>Fondasi (3 pilar)</h2>
+    <label>Eyebrow<input type="text" name="foundationEyebrow" value={home.foundationEyebrow} /></label>
+    <label>Judul section<input type="text" name="foundationTitle" value={home.foundationTitle} /></label>
+    <label>Lead<textarea name="foundationLead">{home.foundationLead}</textarea></label>
+    {
+      home.pillars.map((pillar, i) => (
+        <div class="admin-grid-2">
+          <label>Pilar {i + 1} — judul<input type="text" name={`pillarTitle${i}`} value={pillar.title} /></label>
+          <label>Pilar {i + 1} — deskripsi<textarea name={`pillarDesc${i}`}>{pillar.desc}</textarea></label>
+        </div>
+      ))
+    }
+
+    <h2>Kutipan</h2>
+    <label>Teks<textarea name="quoteText">{home.quoteText}</textarea></label>
+    <label>Sumber<input type="text" name="quoteCite" value={home.quoteCite} /></label>
+
+    <h2>Blok tentang (ringkas)</h2>
+    <label>Eyebrow<input type="text" name="aboutEyebrow" value={home.aboutEyebrow} /></label>
+    <label>Judul<input type="text" name="aboutTitle" value={home.aboutTitle} /></label>
+    <label>Lead<textarea name="aboutLead">{home.aboutLead}</textarea></label>
+    {
+      [0, 1, 2, 3].map((i) => (
+        <label>Bullet {i + 1}<input type="text" name={`aboutBullet${i}`} value={home.aboutBullets[i] || ''} /></label>
+      ))
+    }
+
+    <h2>CTA bawah</h2>
+    <label>Teks<textarea name="ctaQuote">{home.ctaQuote}</textarea></label>
+    <label>Teks tombol<input type="text" name="ctaButton" value={home.ctaButton} /></label>
+
+    <p style="margin-top:1.25rem"><button class="btn btn-primary" type="submit">Simpan beranda</button></p>
+  </form>
+</AdminLayout>

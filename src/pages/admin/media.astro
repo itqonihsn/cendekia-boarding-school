@@ -1,0 +1,46 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { listMedia } from '../../lib/content';
+
+const media = listMedia();
+---
+
+<AdminLayout title="Perpustakaan Media" active="media">
+  <form class="admin-card form" method="POST" action="/api/admin/upload" enctype="multipart/form-data">
+    <input type="hidden" name="returnTo" value="/admin/media" />
+    <label>
+      Upload foto / video (maks. 100 MB)
+      <input type="file" name="file" accept="image/*,video/*" required />
+    </label>
+    <label>Alt / keterangan (opsional)<input type="text" name="alt" /></label>
+    <button class="btn btn-primary" type="submit">Unggah</button>
+  </form>
+
+  <div class="admin-card" style="margin-top:1rem">
+    <h2 style="margin-top:0">File terunggah</h2>
+    {
+      media.length === 0 ? (
+        <p style="color:var(--muted)">Belum ada media. Unggah foto atau video di atas.</p>
+      ) : (
+        <div class="admin-media-grid">
+          {media.map((item) => (
+            <figure class="admin-media-item">
+              {item.mimeType.startsWith('video/') ? (
+                <video src={item.path} controls preload="metadata" />
+              ) : (
+                <img src={item.path} alt={item.alt || item.filename} loading="lazy" />
+              )}
+              <figcaption>
+                <div>{item.filename}</div>
+                <code>{item.path}</code>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      )
+    }
+    <p style="color:var(--muted);font-size:.85rem;margin-bottom:0">
+      Salin path (<code>/uploads/...</code>) ke field gambar/video di form lain, atau unggah langsung di form berita/program.
+    </p>
+  </div>
+</AdminLayout>

@@ -1,16 +1,12 @@
-# Deploy static site to VPS (main → web root)
+# Deploy Astro SSR (website + admin CMS) to VPS
 #
 # Required GitHub secrets:
 #   SSH_HOST, SSH_USER, SSH_KEY
-#   VPS_WEB_DIR   e.g. /var/www/cendekia-boarding-school
+#   VPS_WEB_DIR     e.g. /var/www/cendekia-boarding-school
+#   SESSION_SECRET  min 16 chars (admin login)
 # Optional:
-#   SSH_PORT      (default 22)
-#   SITE_URL      e.g. https://cendekiaboardingschool.id
-#
-# Catatan: SSH user harus punya tulis ke VPS_WEB_DIR (tanpa sudo password).
-# One-time di VPS:
-#   sudo mkdir -p /var/www/cendekia-boarding-school
-#   sudo chown -R $USER:$USER /var/www/cendekia-boarding-school
+#   SSH_PORT, SITE_URL, VPS_DATA_DIR (default: /var/www/cendekia-data)
+#   ADMIN_USERNAME, ADMIN_PASSWORD (only used on first DB seed)
 
 name: Deploy Website to VPS
 
@@ -44,6 +40,7 @@ jobs:
 
       - name: Pack dist
         run: |
+          cp deploy/ecosystem.config.cjs dist/
           tar czf website-dist.tgz -C dist .
           ls -lh website-dist.tgz
 
@@ -58,32 +55,49 @@ jobs:
           target: /tmp/cendekia-web
           overwrite: true
 
-      - name: Extract to web root
+      - name: Extract and restart Node app
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT != '' && secrets.SSH_PORT || '22' }}
+          envs: SESSION_SECRET,ADMIN_USERNAME,ADMIN_PASSWORD
           script: |
             set -euo pipefail
             WEB_DIR="${{ secrets.VPS_WEB_DIR }}"
+            DATA_DIR="${{ secrets.VPS_DATA_DIR != '' && secrets.VPS_DATA_DIR || '/var/www/cendekia-data' }}"
             test -n "$WEB_DIR"
+            test -n "${SESSION_SECRET:-}"
 
-            # Tanpa sudo interaktif — folder harus owned oleh user SSH
-            mkdir -p "$WEB_DIR"
+            mkdir -p "$WEB_DIR" "$DATA_DIR/uploads"
             tar xzf /tmp/cendekia-web/website-dist.tgz -C "$WEB_DIR"
             rm -f /tmp/cendekia-web/website-dist.tgz
 
-            # Reload Nginx hanya jika passwordless sudo tersedia (opsional)
+            export HOST=127.0.0.1
+            export PORT=4321
+            export DATA_DIR
+            export SESSION_SECRET
+            export ADMIN_USERNAME="${ADMIN_USERNAME:-admin}"
+            export ADMIN_PASSWORD="${ADMIN_PASSWORD:-}"
+
+            if command -v pm2 >/dev/null 2>&1; then
+              cd "$WEB_DIR"
+              pm2 startOrRestart ecosystem.config.cjs --update-env
+              pm2 save || true
+            else
+              echo "PM2 not installed — install pm2 and run ecosystem.config.cjs"
+            fi
+
             if command -v nginx >/dev/null 2>&1; then
               if sudo -n nginx -t 2>/dev/null; then
                 sudo -n systemctl reload nginx
-                echo "Nginx reloaded"
-              else
-                echo "Skip Nginx reload (sudo password diperlukan). File sudah ter-deploy."
               fi
             fi
 
-            echo "=== WEBSITE DEPLOY OK (${{ github.sha }}) → $WEB_DIR ==="
-            ls -lah "$WEB_DIR" | head -n 20
+            echo "=== DEPLOY OK (${{ github.sha }}) app=$WEB_DIR data=$DATA_DIR ==="
+
+        env:
+          SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+          ADMIN_USERNAME: ${{ secrets.ADMIN_USERNAME }}
+          ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}

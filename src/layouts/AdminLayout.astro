@@ -1,0 +1,67 @@
+---
+import '../styles/global.css';
+import '../styles/admin.css';
+
+interface Props {
+  title: string;
+  active?: string;
+}
+
+const { title, active = '' } = Astro.props;
+
+const links = [
+  { href: '/admin', label: 'Dashboard', key: 'dashboard' },
+  { href: '/admin/settings', label: 'Pengaturan Situs', key: 'settings' },
+  { href: '/admin/home', label: 'Beranda', key: 'home' },
+  { href: '/admin/tentang', label: 'Tentang', key: 'tentang' },
+  { href: '/admin/pages', label: 'Hero Halaman', key: 'pages' },
+  { href: '/admin/programs', label: 'Program', key: 'programs' },
+  { href: '/admin/facilities', label: 'Fasilitas', key: 'facilities' },
+  { href: '/admin/news', label: 'Berita', key: 'news' },
+  { href: '/admin/media', label: 'Media', key: 'media' },
+];
+
+const saved = Astro.url.searchParams.get('saved') === '1';
+const error = Astro.url.searchParams.get('error');
+---
+
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>{title} · Admin CBS</title>
+  </head>
+  <body>
+    <div class="admin-shell">
+      <aside class="admin-sidebar">
+        <h1>Admin CBS</h1>
+        <p>Panel kelola website</p>
+        <nav class="admin-nav" aria-label="Menu admin">
+          {
+            links.map((link) => (
+              <a href={link.href} class:list={[{ active: active === link.key }]}>{link.label}</a>
+            ))
+          }
+        </nav>
+        <form method="POST" action="/api/admin/logout" style="margin-top:1.5rem">
+          <button class="btn btn-outline" type="submit" style="width:100%;color:white;border-color:rgba(255,255,255,.35)">
+            Keluar
+          </button>
+        </form>
+        <p style="margin-top:1rem;font-size:.75rem;opacity:.75">
+          <a href="/" style="color:var(--yellow-400)">Lihat website</a>
+        </p>
+      </aside>
+      <main class="admin-main">
+        <div class="admin-top">
+          <h1 style="margin:0;font-size:clamp(1.4rem,3vw,1.9rem)">{title}</h1>
+        </div>
+        {saved && <div class="admin-flash">Perubahan berhasil disimpan.</div>}
+        {error && <div class="admin-flash error">{error}</div>}
+        <slot />
+      </main>
+    </div>
+  </body>
+</html>

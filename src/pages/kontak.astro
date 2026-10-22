@@ -1,6 +1,9 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { site } from '../data/site';
+import { getPageHero, getSiteSettings } from '../lib/content';
+
+const site = getSiteSettings();
+const hero = getPageHero('kontak');
 ---
 
 <BaseLayout
@@ -9,9 +12,9 @@ import { site } from '../data/site';
 >
   <section class="page-hero">
     <div class="container">
-      <span class="eyebrow">Hubungi Kami</span>
-      <h1>Kontak &amp; Pendaftaran</h1>
-      <p>Silakan hubungi panitia untuk informasi program, kunjungan, dan pendaftaran.</p>
+      <span class="eyebrow">{hero.eyebrow}</span>
+      <h1>{hero.title}</h1>
+      <p>{hero.subtitle}</p>
     </div>
   </section>
 

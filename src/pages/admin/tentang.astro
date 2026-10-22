@@ -1,0 +1,50 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { getTentangContent } from '../../lib/content';
+
+const t = getTentangContent();
+---
+
+<AdminLayout title="Kelola Tentang" active="tentang">
+  <form class="form admin-card" method="POST" action="/api/admin/tentang">
+    <h2 style="margin-top:0">Hero halaman</h2>
+    <div class="admin-grid-3">
+      <label>Eyebrow<input type="text" name="heroEyebrow" value={t.hero.eyebrow} /></label>
+      <label>Judul<input type="text" name="heroTitle" value={t.hero.title} /></label>
+      <label>Subjudul<textarea name="heroSubtitle">{t.hero.subtitle}</textarea></label>
+    </div>
+
+    <h2>Siapa kami</h2>
+    <label>Eyebrow<input type="text" name="whoEyebrow" value={t.whoEyebrow} /></label>
+    <label>Judul<input type="text" name="whoTitle" value={t.whoTitle} /></label>
+    <label>Paragraf<textarea name="whoLead">{t.whoLead}</textarea></label>
+    <label>Catatan yayasan<textarea name="whoFoundationNote">{t.whoFoundationNote}</textarea></label>
+
+    <h2>Visi & misi</h2>
+    <label>Judul visi<input type="text" name="visionTitle" value={t.visionTitle} /></label>
+    <label>Visi<textarea name="visionText">{t.visionText}</textarea></label>
+    <label>Judul misi<input type="text" name="missionTitle" value={t.missionTitle} /></label>
+    {
+      [0, 1, 2, 3].map((i) => (
+        <label>Misi {i + 1}<input type="text" name={`mission${i}`} value={t.missionItems[i] || ''} /></label>
+      ))
+    }
+
+    <h2>Nilai inti</h2>
+    <div class="admin-grid-2">
+      <label>Eyebrow<input type="text" name="valuesEyebrow" value={t.valuesEyebrow} /></label>
+      <label>Judul<input type="text" name="valuesTitle" value={t.valuesTitle} /></label>
+    </div>
+    {
+      t.values.map((v, i) => (
+        <div class="admin-grid-3">
+          <label>Label<input type="text" name={`valueLabel${i}`} value={v.label} /></label>
+          <label>Judul<input type="text" name={`valueTitle${i}`} value={v.title} /></label>
+          <label>Deskripsi<textarea name={`valueDesc${i}`}>{v.desc}</textarea></label>
+        </div>
+      ))
+    }
+
+    <p style="margin-top:1.25rem"><button class="btn btn-primary" type="submit">Simpan tentang</button></p>
+  </form>
+</AdminLayout>

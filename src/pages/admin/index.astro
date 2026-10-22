@@ -1,0 +1,27 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { listNews, listPrograms } from '../../lib/content';
+import { getSession } from '../../lib/auth';
+
+const session = getSession(Astro.cookies)!;
+const newsCount = listNews().length;
+const programCount = listPrograms().length;
+---
+
+<AdminLayout title="Dashboard" active="dashboard">
+  <div class="admin-grid-2">
+    <div class="admin-card">
+      <h2 style="margin-top:0">Selamat datang, {session.username}</h2>
+      <p style="color:var(--muted)">
+        Gunakan menu di kiri untuk mengubah teks, foto, video, program, fasilitas, dan berita. Perubahan langsung tampil di website publik.
+      </p>
+    </div>
+    <div class="admin-card">
+      <h3 style="margin-top:0">Ringkasan</h3>
+      <ul class="check-list">
+        <li>{programCount} program terdaftar</li>
+        <li>{newsCount} berita / kegiatan</li>
+      </ul>
+    </div>
+  </div>
+</AdminLayout>

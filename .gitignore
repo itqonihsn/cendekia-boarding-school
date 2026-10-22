@@ -25,3 +25,6 @@ pnpm-debug.log*
 
 # deploy packs
 *.tgz
+
+# CMS data (production: persistent path via DATA_DIR)
+/data/

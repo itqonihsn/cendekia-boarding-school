@@ -1,6 +1,17 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { news, programs, site } from '../data/site';
+import {
+  getHomeContent,
+  getSiteSettings,
+  listNews,
+  listPrograms,
+} from '../lib/content';
+
+const site = getSiteSettings();
+const home = getHomeContent();
+const programs = listPrograms();
+const news = listNews(true).slice(0, 3);
+const heroHasPhoto = Boolean(home.heroImage);
 ---
 
 <BaseLayout
@@ -8,16 +19,13 @@ import { news, programs, site } from '../data/site';
   description="Website resmi Cendekia Boarding School — Pesantren Modern Terpadu di bawah Yayasan Syarif Muslih Institute."
 >
   <section class="home-hero">
-    <div class="hero-media" aria-hidden="true"></div>
+    <div class="hero-media" class:list={[{ 'has-photo': heroHasPhoto }]} style={heroHasPhoto ? `--hero-photo:url('${home.heroImage}')` : undefined} aria-hidden="true"></div>
     <div class="container hero-content">
       <img class="hero-logo" src={site.logo} alt={site.name} width="140" height="140" />
       <p class="brand-signal">{site.name}</p>
       <p class="brand-foundation">{site.foundation}</p>
-      <h1>Mendidik Generasi <em>Berilmu</em> &amp; Berakhlak</h1>
-      <p>
-        Pesantren Modern Terpadu — memadukan tahfidz, keilmuan, serta pembinaan adab
-        dalam lingkungan boarding yang terarah.
-      </p>
+      <h1>{home.heroTitle} <em>{home.heroEmphasis}</em> &amp; Berakhlak</h1>
+      <p>{home.heroLead}</p>
       <div class="hero-actions">
         <a class="btn btn-yellow" href="/program">Lihat Program</a>
         <a class="btn btn-outline" href="/kontak">Info Pendaftaran</a>
@@ -28,34 +36,28 @@ import { news, programs, site } from '../data/site';
   <section class="section">
     <div class="container">
       <div class="section-head center">
-        <span class="eyebrow">Fondasi Kami</span>
-        <h2>Pendidikan yang Seimbang &amp; Bermakna</h2>
-        <p class="lead">Ilmu, iman, dan akhlak tumbuh bersama dalam ritme kehidupan pesantren yang tenang dan disiplin.</p>
+        <span class="eyebrow">{home.foundationEyebrow}</span>
+        <h2>{home.foundationTitle}</h2>
+        <p class="lead">{home.foundationLead}</p>
       </div>
       <div class="feature-grid">
-        <article class="feature-item">
-          <div class="feature-icon">01</div>
-          <h3>Pendidikan Qur’ani</h3>
-          <p>Pembinaan tahfidz dan pemahaman Al-Qur’an yang terstruktur.</p>
-        </article>
-        <article class="feature-item">
-          <div class="feature-icon">02</div>
-          <h3>Akademik Unggul</h3>
-          <p>Kurikulum kuat agar santri siap ke jenjang pendidikan tinggi.</p>
-        </article>
-        <article class="feature-item">
-          <div class="feature-icon">03</div>
-          <h3>Adab &amp; Karakter</h3>
-          <p>Pembiasaan ibadah, adab, dan kepemimpinan dalam asrama.</p>
-        </article>
+        {
+          home.pillars.map((pillar, i) => (
+            <article class="feature-item">
+              <div class="feature-icon">{String(i + 1).padStart(2, '0')}</div>
+              <h3>{pillar.title}</h3>
+              <p>{pillar.desc}</p>
+            </article>
+          ))
+        }
       </div>
     </div>
   </section>
 
   <section class="quote-band">
     <div class="container">
-      <p>“Sebaik-baik manusia adalah yang paling bermanfaat bagi manusia.”</p>
-      <cite>— Hadis Nabi Muhammad ﷺ</cite>
+      <p>{home.quoteText}</p>
+      <cite>{home.quoteCite}</cite>
     </div>
   </section>
 
@@ -66,18 +68,12 @@ import { news, programs, site } from '../data/site';
       </div>
       <div>
         <div class="section-head">
-          <span class="eyebrow">Tentang Kami</span>
-          <h2>{site.name}</h2>
-          <p class="lead">
-            Lembaga pendidikan Islam berasrama yang membentuk pribadi muslim cerdas, beriman, dan
-            berakhlak mulia — memadukan tradisi pesantren dengan standar pendidikan modern.
-          </p>
+          <span class="eyebrow">{home.aboutEyebrow}</span>
+          <h2>{home.aboutTitle}</h2>
+          <p class="lead">{home.aboutLead}</p>
         </div>
         <ul class="check-list">
-          <li>Integrasi kurikulum diniyah dan akademik</li>
-          <li>Pembinaan bahasa Arab &amp; Inggris</li>
-          <li>Penguatan karakter dan soft skill</li>
-          <li>Lingkungan belajar aman, nyaman, dan religius</li>
+          {home.aboutBullets.map((item) => <li>{item}</li>)}
         </ul>
         <p style="margin-top: 1.5rem">
           <a class="btn btn-primary" href="/tentang">Selengkapnya</a>
@@ -96,9 +92,10 @@ import { news, programs, site } from '../data/site';
         {
           programs.slice(0, 3).map((item, i) => (
             <article class="feature-item">
+              {item.image && <img src={item.image} alt="" class="feature-thumb" loading="lazy" />}
               <div class="feature-icon">{String(i + 1).padStart(2, '0')}</div>
               <h3>{item.title}</h3>
-              <p>{item.desc}</p>
+              <p>{item.description}</p>
             </article>
           ))
         }
@@ -119,11 +116,12 @@ import { news, programs, site } from '../data/site';
         {
           news.map((item) => (
             <article class="news-item">
+              {item.coverImage && <img src={item.coverImage} alt="" class="news-cover" loading="lazy" />}
               <div class="news-meta">
                 <span>{item.category}</span>
-                <span>{item.date}</span>
+                <span>{item.publishedAt}</span>
               </div>
-              <h3>{item.title}</h3>
+              <h3><a href={`/berita/${item.slug}`}>{item.title}</a></h3>
               <p>{item.excerpt}</p>
             </article>
           ))
@@ -137,9 +135,9 @@ import { news, programs, site } from '../data/site';
 
   <section class="quote-band">
     <div class="container">
-      <p>Siap menjadi bagian dari keluarga besar Pesantren Cendekia?</p>
+      <p>{home.ctaQuote}</p>
       <p style="margin-top: 1.25rem">
-        <a class="btn btn-outline" href="/kontak">Hubungi Panitia Pendaftaran</a>
+        <a class="btn btn-outline" href="/kontak">{home.ctaButton}</a>
       </p>
     </div>
   </section>
@@ -162,6 +160,13 @@ import { news, programs, site } from '../data/site';
     background:
       linear-gradient(105deg, rgba(20, 90, 31, 0.94) 0%, rgba(36, 155, 48, 0.78) 48%, rgba(46, 175, 58, 0.45) 100%),
       radial-gradient(circle at 78% 30%, rgba(255, 230, 0, 0.35), transparent 35%),
+      linear-gradient(145deg, #145a1f, #2eaf3a 55%, #3ec04a);
+  }
+
+  .hero-media.has-photo {
+    background:
+      linear-gradient(105deg, rgba(20, 90, 31, 0.88) 0%, rgba(36, 155, 48, 0.72) 48%, rgba(46, 175, 58, 0.5) 100%),
+      var(--hero-photo) center/cover no-repeat,
       linear-gradient(145deg, #145a1f, #2eaf3a 55%, #3ec04a);
   }
 
@@ -232,6 +237,15 @@ import { news, programs, site } from '../data/site';
     flex-wrap: wrap;
     gap: 0.75rem;
     margin-top: 1.75rem;
+  }
+
+  .feature-thumb,
+  .news-cover {
+    width: 100%;
+    border-radius: 0.75rem;
+    margin-bottom: 0.75rem;
+    aspect-ratio: 16/10;
+    object-fit: cover;
   }
 
   @keyframes rise {

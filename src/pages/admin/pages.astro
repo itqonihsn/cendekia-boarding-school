@@ -1,0 +1,30 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { getPageHero } from '../../lib/content';
+
+const pages = ['program', 'fasilitas', 'berita', 'kontak'] as const;
+const labels: Record<(typeof pages)[number], string> = {
+  program: 'Program',
+  fasilitas: 'Fasilitas',
+  berita: 'Berita',
+  kontak: 'Kontak',
+};
+---
+
+<AdminLayout title="Hero Halaman" active="pages">
+  {
+    pages.map((key) => {
+      const hero = getPageHero(key);
+      return (
+        <form class="form admin-card" method="POST" action="/api/admin/page-hero">
+          <input type="hidden" name="page" value={key} />
+          <h2 style="margin-top:0">Halaman {labels[key]}</h2>
+          <label>Eyebrow<input type="text" name="eyebrow" value={hero.eyebrow} /></label>
+          <label>Judul<input type="text" name="title" value={hero.title} /></label>
+          <label>Subjudul<textarea name="subtitle">{hero.subtitle}</textarea></label>
+          <button class="btn btn-primary" type="submit">Simpan {labels[key]}</button>
+        </form>
+      );
+    })
+  }
+</AdminLayout>
