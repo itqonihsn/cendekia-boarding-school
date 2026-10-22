@@ -59,6 +59,7 @@ function isActive(href: string) {
     position: sticky;
     top: 0;
     z-index: 50;
+    isolation: isolate;
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
     background: rgba(255, 253, 245, 0.94);
@@ -67,11 +68,12 @@ function isActive(href: string) {
   }
 
   .header-inner {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    min-height: 4.6rem;
+    min-height: var(--site-header-h, 4.6rem);
   }
 
   .brand {
@@ -83,7 +85,8 @@ function isActive(href: string) {
 
   .brand-logo {
     width: 52px;
-    height: 52px;
+    height: auto;
+    aspect-ratio: 819 / 788;
     object-fit: contain;
     flex-shrink: 0;
     filter: drop-shadow(0 4px 10px rgba(20, 90, 31, 0.18));
@@ -176,42 +179,53 @@ function isActive(href: string) {
   }
 
   @media (max-width: 900px) {
+    .brand {
+      flex: 1;
+      min-width: 0;
+    }
+
     .brand-text strong {
-      font-size: 0.95rem;
-      max-width: 12ch;
+      font-size: clamp(0.88rem, 3.5vw, 0.95rem);
+      max-width: 14ch;
+      overflow-wrap: anywhere;
     }
 
     .brand-text span {
       font-size: 0.65rem;
-      max-width: 18ch;
+      max-width: 22ch;
+      overflow-wrap: anywhere;
     }
 
     .brand-logo {
-      width: 46px;
-      height: 46px;
+      width: 44px;
     }
 
     .nav-toggle {
       display: inline-flex;
+      flex-shrink: 0;
     }
 
     .site-nav {
-      position: absolute;
-      left: 0.75rem;
-      right: 0.75rem;
-      top: calc(100% + 0.35rem);
+      position: fixed;
+      left: 0;
+      right: 0;
+      top: calc(var(--site-header-h, 4.6rem) + env(safe-area-inset-top));
+      bottom: 0;
       display: none;
       flex-direction: column;
       align-items: stretch;
-      gap: 0.65rem;
-      padding: 0.85rem;
-      background: white;
-      border: 1px solid var(--line);
-      border-radius: 1rem;
-      box-shadow: var(--shadow);
-      max-height: calc(100dvh - 5.5rem - env(safe-area-inset-top));
+      gap: 0.5rem;
+      padding: 1rem 1rem calc(1.25rem + env(safe-area-inset-bottom));
+      background: rgba(255, 253, 245, 0.98);
+      border: none;
+      border-top: 2px solid rgba(46, 175, 58, 0.2);
+      border-radius: 0;
+      box-shadow: none;
+      max-height: none;
       overflow-y: auto;
+      overscroll-behavior: contain;
       -webkit-overflow-scrolling: touch;
+      z-index: 49;
     }
 
     .site-nav.open {
@@ -220,16 +234,19 @@ function isActive(href: string) {
 
     .site-nav ul {
       flex-direction: column;
+      gap: 0.25rem;
     }
 
     .site-nav a {
       width: 100%;
-      padding: 0.75rem 0.9rem;
+      padding: 0.85rem 1rem;
       border-radius: 0.75rem;
+      font-size: 1rem;
     }
 
     .nav-cta {
       width: 100%;
+      margin-top: 0.35rem;
     }
   }
 </style>
@@ -256,5 +273,17 @@ function isActive(href: string) {
 
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') setOpen(false);
+  });
+
+  document.addEventListener('click', (event) => {
+    if (!nav?.classList.contains('open')) return;
+    const target = event.target;
+    if (!(target instanceof Node)) return;
+    if (nav.contains(target) || toggle?.contains(target)) return;
+    setOpen(false);
+  });
+
+  window.matchMedia('(min-width: 901px)').addEventListener('change', (event) => {
+    if (event.matches) setOpen(false);
   });
 </script>

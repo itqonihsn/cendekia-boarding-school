@@ -230,10 +230,43 @@
   .admin-sidebar {
     position: static;
     height: auto;
+    padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+  }
+
+  .admin-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+
+  .admin-nav a {
+    flex: 1 1 calc(50% - 0.35rem);
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 0.85rem;
+    padding: 0.5rem 0.4rem;
+  }
+
+  .admin-main {
+    padding: 1rem 1rem calc(1.5rem + env(safe-area-inset-bottom));
+  }
+
+  .admin-table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   .admin-grid-2,
   .admin-grid-3 {
     grid-template-columns: 1fr;
+  }
+
+  .admin-card .btn {
+    width: 100%;
+    max-width: none;
   }
 }

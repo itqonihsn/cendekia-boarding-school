@@ -100,7 +100,7 @@ const heroHasPhoto = Boolean(home.heroImage);
           ))
         }
       </div>
-      <p style="text-align:center;margin-top:1.75rem">
+      <p class="text-center-actions" style="margin-top:1.75rem">
         <a class="btn btn-outline-dark" href="/program">Semua Program</a>
       </p>
     </div>
@@ -127,7 +127,7 @@ const heroHasPhoto = Boolean(home.heroImage);
           ))
         }
       </div>
-      <p style="text-align:center;margin-top:1.75rem">
+      <p class="text-center-actions" style="margin-top:1.75rem">
         <a class="btn btn-outline-dark" href="/berita">Lihat Berita</a>
       </p>
     </div>
@@ -189,14 +189,12 @@ const heroHasPhoto = Boolean(home.heroImage);
   }
 
   .hero-logo {
-    width: 120px;
-    height: 120px;
+    width: clamp(96px, 28vw, 140px);
+    height: auto;
+    aspect-ratio: 819 / 788;
     object-fit: contain;
     margin-bottom: 1rem;
-    filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.25));
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 50%;
-    padding: 0.35rem;
+    filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.28));
   }
 
   .brand-signal {
@@ -261,20 +259,30 @@ const heroHasPhoto = Boolean(home.heroImage);
 
   @media (max-width: 700px) {
     .home-hero {
-      min-height: 78vh;
-      min-height: 78dvh;
+      min-height: auto;
     }
     .hero-content {
-      padding: calc(5.5rem + env(safe-area-inset-top)) 0 3.25rem;
-      margin-left: 1rem;
-      width: calc(100% - 2rem);
+      padding: calc(5rem + env(safe-area-inset-top)) 0 calc(2.75rem + env(safe-area-inset-bottom));
+      margin-left: max(0.625rem, calc((100% - var(--container)) / 2));
+      width: min(40rem, calc(100% - 1.25rem));
     }
     .hero-content h1 {
       max-width: none;
+      font-size: clamp(2rem, 9vw, 2.75rem);
+    }
+    .brand-signal {
+      font-size: clamp(1.2rem, 5vw, 1.45rem);
+      line-height: 1.25;
+    }
+    .brand-foundation {
+      font-size: 0.88rem;
+      line-height: 1.4;
+    }
+    .hero-content > p {
+      font-size: 1rem;
     }
     .hero-logo {
-      width: 96px;
-      height: 96px;
+      width: min(32vw, 112px);
     }
     .hero-actions {
       flex-direction: column;

@@ -8,7 +8,7 @@ export const site = {
   phone: '+62 812-3456-7890',
   address: 'Bogor, Indonesia',
   hours: 'Senin–Sabtu, 08.00–16.00 WIB',
-  logo: '/logo.png',
+  logo: '/logo.svg',
   domain: 'https://cendekiaboardingschool.id',
 };
 

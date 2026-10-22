@@ -54,7 +54,7 @@ const embed = videoKind === 'youtube' ? youtubeEmbedUrl(videoUrl) : null;
       <video class="article-video" src={videoPath} controls preload="metadata" />
     )}
     <div class="article-body" set:html={html} />
-    <p style="margin-top:2rem">
+    <p class="article-back">
       <a class="btn btn-outline-dark" href={backHref}>{backLabel}</a>
     </p>
   </div>
@@ -119,6 +119,46 @@ const embed = videoKind === 'youtube' ? youtubeEmbedUrl(videoUrl) : null;
 
   .article-body :global(img) {
     max-width: 100%;
+    height: auto;
     border-radius: 0.75rem;
+  }
+
+  .article-body :global(table) {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 1rem;
+  }
+
+  .article-body :global(pre),
+  .article-body :global(iframe) {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  .article-back {
+    margin-top: 2rem;
+  }
+
+  @media (max-width: 600px) {
+    .article-wrap {
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .article-wrap h1 {
+      font-size: clamp(1.65rem, 6.5vw, 2rem);
+    }
+
+    .article-back .btn {
+      width: 100%;
+    }
+
+    .article-video {
+      max-height: min(56vw, 320px);
+      width: 100%;
+      object-fit: contain;
+      background: #000;
+    }
   }
 </style>

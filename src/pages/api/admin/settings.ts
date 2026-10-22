@@ -3,7 +3,7 @@ import { getSiteSettings, saveSiteSettings } from '../../../lib/content';
 import { parseImagePathFromForm } from '../../../lib/admin-form';
 import { saveUpload } from '../../../lib/upload';
 
-const DEFAULT_LOGO = '/logo.png';
+const DEFAULT_LOGO = '/logo.svg';
 
 export const prerender = false;
 
