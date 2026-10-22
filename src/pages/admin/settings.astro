@@ -1,4 +1,5 @@
 ---
+import AdminImageField from '../../components/AdminImageField.astro';
 import AdminLayout from '../../layouts/AdminLayout.astro';
 import { getSiteSettings } from '../../lib/content';
 
@@ -20,21 +21,14 @@ const site = getSiteSettings();
       <label>Jam layanan<input type="text" name="hours" value={site.hours} required /></label>
     </div>
     <hr style="margin:1.25rem 0;border:none;border-top:1px solid var(--line)" />
-    <div class="admin-grid-2">
-      <label>
-        Logo (path saat ini)
-        <input type="text" name="logo" value={site.logo} />
-      </label>
-      <label>
-        Upload logo baru
-        <input type="file" name="logoFile" accept="image/*" />
-      </label>
-    </div>
-    {site.logo && (
-      <p style="margin-top:1rem">
-        <img src={site.logo} alt="Logo saat ini" width="96" height="96" style="object-fit:contain;background:#fff;border-radius:50%;padding:.25rem;border:1px solid var(--line)" />
-      </p>
-    )}
+    <AdminImageField
+      label="Logo situs"
+      pathName="logo"
+      fileName="logoFile"
+      clearName="clearLogo"
+      value={site.logo}
+      hint="Hapus logo akan mengembalikan ke logo bawaan (/logo.png). Upload untuk mengganti."
+    />
     <p style="margin-top:1.25rem">
       <button class="btn btn-primary" type="submit">Simpan pengaturan</button>
     </p>

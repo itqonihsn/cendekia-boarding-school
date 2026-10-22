@@ -1,0 +1,44 @@
+---
+interface Props {
+  label?: string;
+  pathName: string;
+  fileName: string;
+  clearName: string;
+  value: string;
+  accept?: string;
+  hint?: string;
+}
+
+const {
+  label = 'Foto',
+  pathName,
+  fileName,
+  clearName,
+  value,
+  accept = 'image/*',
+  hint,
+} = Astro.props;
+---
+
+<fieldset class="admin-media-field">
+  <legend>{label}</legend>
+  {value ? (
+    <div class="admin-media-preview">
+      <img src={value} alt="" loading="lazy" />
+    </div>
+  ) : (
+    <p class="admin-media-empty">Belum ada foto.</p>
+  )}
+  <label>Path file (dari perpustakaan media)
+    <input type="text" name={pathName} value={value} placeholder="/uploads/..." />
+  </label>
+  <label>Ganti — upload file baru
+    <input type="file" name={fileName} accept={accept} />
+  </label>
+  {value && (
+    <label class="admin-media-clear">
+      <input type="checkbox" name={clearName} /> Hapus foto (kosongkan)
+    </label>
+  )}
+  {hint && <p class="admin-media-hint">{hint}</p>}
+</fieldset>

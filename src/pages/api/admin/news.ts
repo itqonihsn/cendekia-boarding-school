@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { deleteNews, getNewsById, upsertNews } from '../../../lib/content';
+import { parseCoverImageFromForm, parsePublished, parseVideoFromForm } from '../../../lib/admin-form';
 import { saveUpload } from '../../../lib/upload';
 
 export const prerender = false;
@@ -18,29 +19,18 @@ export const POST: APIRoute = async ({ request, redirect }) => {
   const id = Number(form.get('id') || 0) || undefined;
   const existing = id ? getNewsById(id) : null;
 
+  let coverImage = parseCoverImageFromForm(form, existing?.coverImage);
   const coverFile = form.get('coverFile');
-  let coverImage = String(form.get('coverImage') || existing?.coverImage || '');
   if (coverFile instanceof File && coverFile.size > 0) {
     const uploaded = await saveUpload(coverFile, String(form.get('title') || 'Berita'));
     coverImage = uploaded.path;
   }
 
-  const videoKind = String(form.get('videoKind') || 'none') as 'none' | 'youtube' | 'upload';
-  let videoUrl = String(form.get('videoUrl') || existing?.videoUrl || '');
-  let videoPath = String(form.get('videoPath') || existing?.videoPath || '');
-
+  let video = parseVideoFromForm(form, existing ?? undefined);
   const videoFile = form.get('videoFile');
-  if (videoKind === 'upload' && videoFile instanceof File && videoFile.size > 0) {
+  if (video.videoKind === 'upload' && videoFile instanceof File && videoFile.size > 0) {
     const uploaded = await saveUpload(videoFile, String(form.get('title') || 'Video berita'));
-    videoPath = uploaded.path;
-    videoUrl = '';
-  }
-  if (videoKind === 'youtube') {
-    videoPath = '';
-  }
-  if (videoKind === 'none') {
-    videoUrl = '';
-    videoPath = '';
+    video = { videoKind: 'upload', videoUrl: '', videoPath: uploaded.path };
   }
 
   const newId = upsertNews({
@@ -52,10 +42,10 @@ export const POST: APIRoute = async ({ request, redirect }) => {
     excerpt: String(form.get('excerpt') || ''),
     body: String(form.get('body') || ''),
     coverImage,
-    videoKind,
-    videoUrl,
-    videoPath,
-    published: form.get('published') === 'on',
+    videoKind: video.videoKind,
+    videoUrl: video.videoUrl,
+    videoPath: video.videoPath,
+    published: parsePublished(form),
   });
 
   const dest = id ? returnTo : `/admin/news/${newId}?saved=1`;

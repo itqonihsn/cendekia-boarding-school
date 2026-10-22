@@ -1,4 +1,5 @@
 ---
+import AdminImageField from '../../components/AdminImageField.astro';
 import AdminLayout from '../../layouts/AdminLayout.astro';
 import { getHomeContent } from '../../lib/content';
 
@@ -13,10 +14,14 @@ const home = getHomeContent();
       <label>Kata emphasis (warna kuning)<input type="text" name="heroEmphasis" value={home.heroEmphasis} required /></label>
     </div>
     <label>Paragraf hero<textarea name="heroLead">{home.heroLead}</textarea></label>
-    <div class="admin-grid-2">
-      <label>Background image (path)<input type="text" name="heroImage" value={home.heroImage} placeholder="/uploads/..." /></label>
-      <label>Upload background hero<input type="file" name="heroImageFile" accept="image/*" /></label>
-    </div>
+    <AdminImageField
+      label="Background hero"
+      pathName="heroImage"
+      fileName="heroImageFile"
+      clearName="clearHeroImage"
+      value={home.heroImage}
+      hint="Kosongkan background jika tidak ingin gambar di belakang hero."
+    />
 
     <h2>Fondasi (3 pilar)</h2>
     <label>Eyebrow<input type="text" name="foundationEyebrow" value={home.foundationEyebrow} /></label>

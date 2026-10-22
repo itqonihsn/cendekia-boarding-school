@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { getHomeContent, saveHomeContent } from '../../../lib/content';
+import { parseImagePathFromForm } from '../../../lib/admin-form';
 import { saveUpload } from '../../../lib/upload';
 
 export const prerender = false;
@@ -9,7 +10,7 @@ export const POST: APIRoute = async ({ request, redirect }) => {
   const current = getHomeContent();
 
   const heroFile = form.get('heroImageFile');
-  let heroImage = String(form.get('heroImage') || current.heroImage);
+  let heroImage = parseImagePathFromForm(form, 'heroImage', 'clearHeroImage', current.heroImage);
   if (heroFile instanceof File && heroFile.size > 0) {
     const uploaded = await saveUpload(heroFile, 'Hero beranda');
     heroImage = uploaded.path;

@@ -1,6 +1,9 @@
 import type { APIRoute } from 'astro';
 import { getSiteSettings, saveSiteSettings } from '../../../lib/content';
+import { parseImagePathFromForm } from '../../../lib/admin-form';
 import { saveUpload } from '../../../lib/upload';
+
+const DEFAULT_LOGO = '/logo.png';
 
 export const prerender = false;
 
@@ -9,7 +12,10 @@ export const POST: APIRoute = async ({ request, redirect }) => {
   const current = getSiteSettings();
 
   const logoFile = form.get('logoFile');
-  let logo = String(form.get('logo') || current.logo);
+  let logo = parseImagePathFromForm(form, 'logo', 'clearLogo', current.logo);
+  if (form.get('clearLogo') === 'on' && !(logoFile instanceof File && logoFile.size > 0)) {
+    logo = DEFAULT_LOGO;
+  }
   if (logoFile instanceof File && logoFile.size > 0) {
     const uploaded = await saveUpload(logoFile, 'Logo');
     logo = uploaded.path;

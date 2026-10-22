@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
 import { deleteProgram, getProgramById, upsertProgram } from '../../../lib/content';
-import { parsePublished, parseVideoFromForm } from '../../../lib/admin-form';
+import { parseCoverImageFromForm, parsePublished, parseVideoFromForm } from '../../../lib/admin-form';
 import { saveUpload } from '../../../lib/upload';
 
 export const prerender = false;
@@ -19,7 +19,7 @@ export const POST: APIRoute = async ({ request, redirect }) => {
   const id = Number(form.get('id') || 0) || undefined;
   const existing = id ? getProgramById(id) : null;
 
-  let image = String(form.get('coverImage') || existing?.image || '');
+  let image = parseCoverImageFromForm(form, existing?.image);
   const coverFile = form.get('coverFile');
   if (coverFile instanceof File && coverFile.size > 0) {
     const uploaded = await saveUpload(coverFile, String(form.get('title') || 'Program'));
