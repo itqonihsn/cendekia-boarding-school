@@ -38,10 +38,12 @@ jobs:
           SITE_URL: ${{ secrets.SITE_URL != '' && secrets.SITE_URL || 'https://cendekiaboardingschool.id' }}
         run: npm run build
 
-      - name: Pack dist
+      - name: Pack release bundle
         run: |
-          cp deploy/ecosystem.config.cjs dist/
-          tar czf website-dist.tgz -C dist .
+          mkdir -p release/dist
+          cp -R dist/. release/dist/
+          cp package.json package-lock.json release/
+          tar czf website-dist.tgz -C release .
           ls -lh website-dist.tgz
 
       - name: Upload bundle to VPS
@@ -83,10 +85,21 @@ jobs:
 
             echo "Node on VPS: $(node -v 2>/dev/null || echo 'NOT INSTALLED')"
 
+            cd "$WEB_DIR"
+            npm ci --omit=dev
+
+            printf '%s\n' \
+              'module.exports = {' \
+              '  apps: [{' \
+              "    name: 'cendekia-web'," \
+              "    script: './dist/server/entry.mjs'," \
+              "    node_args: '--env-file=${DATA_DIR}/app.env'," \
+              '  }],' \
+              '};' > "$WEB_DIR/ecosystem.config.cjs"
+
             if command -v pm2 >/dev/null 2>&1; then
-              cd "$WEB_DIR"
               pm2 delete cendekia-web 2>/dev/null || true
-              pm2 start ecosystem.config.cjs --update-env --node-args="--env-file=$DATA_DIR/app.env"
+              pm2 start "$WEB_DIR/ecosystem.config.cjs" --update-env
               pm2 save || true
               sleep 4
               pm2 status || true
