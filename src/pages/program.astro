@@ -1,8 +1,10 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getPageHero, getSiteSettings, listPrograms } from '../lib/content';
+import { waHref, waLinkAttrs, whatsappProgramUrl } from '../lib/whatsapp';
 
 const site = getSiteSettings();
+const waProgram = whatsappProgramUrl(site.phone, site.shortName);
 const hero = getPageHero('program');
 const programs = listPrograms(true);
 ---
@@ -35,7 +37,7 @@ const programs = listPrograms(true);
         }
       </div>
       <p style="text-align:center;margin-top:2rem">
-        <a class="btn btn-primary" href="/kontak">Tanya Program &amp; Pendaftaran</a>
+        <a class="btn btn-primary" href={waHref(waProgram)} {...waLinkAttrs(waProgram)}>Tanya Program &amp; Pendaftaran</a>
       </p>
     </div>
   </section>

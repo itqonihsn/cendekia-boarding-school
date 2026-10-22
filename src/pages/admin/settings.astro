@@ -16,7 +16,13 @@ const site = getSiteSettings();
       <label>Tagline<textarea name="tagline">{site.tagline}</textarea></label>
       <label>Domain (canonical)<input type="url" name="domain" value={site.domain} /></label>
       <label>Email<input type="email" name="email" value={site.email} required /></label>
-      <label>Telepon<input type="text" name="phone" value={site.phone} required /></label>
+      <label>
+        Telepon / WhatsApp
+        <input type="text" name="phone" value={site.phone} required placeholder="+62 812-xxxx-xxxx" />
+      </label>
+      <p class="admin-media-hint" style="margin:-0.5rem 0 0.75rem">
+        Nomor ini dipakai untuk tombol chat WhatsApp di halaman Kontak dan footer.
+      </p>
       <label>Alamat<input type="text" name="address" value={site.address} required /></label>
       <label>Jam layanan<input type="text" name="hours" value={site.hours} required /></label>
     </div>

@@ -1,12 +1,14 @@
 ---
 import { nav } from '../data/site';
 import type { SiteSettings } from '../lib/types';
+import { waHref, waLinkAttrs, whatsappRegistrationUrl } from '../lib/whatsapp';
 
 interface Props {
   site: SiteSettings;
 }
 
 const { site } = Astro.props;
+const waHubungi = whatsappRegistrationUrl(site.phone, site.shortName);
 
 const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
 
@@ -49,7 +51,7 @@ function isActive(href: string) {
           ))
         }
       </ul>
-      <a class="btn btn-primary nav-cta" href="/kontak" data-nav-link>Hubungi Kami</a>
+      <a class="btn btn-primary nav-cta" href={waHref(waHubungi)} {...waLinkAttrs(waHubungi)} data-nav-link>Hubungi Kami</a>
     </nav>
   </div>
 </header>

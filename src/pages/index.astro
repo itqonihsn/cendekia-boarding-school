@@ -6,8 +6,10 @@ import {
   listNews,
   listPrograms,
 } from '../lib/content';
+import { waHref, waLinkAttrs, whatsappRegistrationUrl } from '../lib/whatsapp';
 
 const site = getSiteSettings();
+const waPendaftaran = whatsappRegistrationUrl(site.phone, site.shortName);
 const home = getHomeContent();
 const programs = listPrograms(true);
 const news = listNews(true).slice(0, 3);
@@ -28,7 +30,7 @@ const heroHasPhoto = Boolean(home.heroImage);
       <p>{home.heroLead}</p>
       <div class="hero-actions">
         <a class="btn btn-yellow" href="/program">Lihat Program</a>
-        <a class="btn btn-outline" href="/kontak">Info Pendaftaran</a>
+        <a class="btn btn-outline" href={waHref(waPendaftaran)} {...waLinkAttrs(waPendaftaran)}>Info Pendaftaran</a>
       </div>
     </div>
   </section>
@@ -137,7 +139,7 @@ const heroHasPhoto = Boolean(home.heroImage);
     <div class="container">
       <p>{home.ctaQuote}</p>
       <p style="margin-top: 1.25rem">
-        <a class="btn btn-outline" href="/kontak">{home.ctaButton}</a>
+        <a class="btn btn-outline" href={waHref(waPendaftaran)} {...waLinkAttrs(waPendaftaran)}>{home.ctaButton}</a>
       </p>
     </div>
   </section>

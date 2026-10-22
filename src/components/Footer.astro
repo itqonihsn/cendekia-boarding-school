@@ -1,12 +1,14 @@
 ---
 import { nav } from '../data/site';
 import type { SiteSettings } from '../lib/types';
+import { whatsappChatUrl } from '../lib/whatsapp';
 
 interface Props {
   site: SiteSettings;
 }
 
 const { site } = Astro.props;
+const waUrl = whatsappChatUrl(site.phone);
 ---
 
 <footer class="site-footer">
@@ -34,7 +36,17 @@ const { site } = Astro.props;
       <ul>
         <li>{site.address}</li>
         <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
-        <li><a href={`tel:${site.phone.replace(/\s+/g, '')}`}>{site.phone}</a></li>
+        <li>
+          {
+            waUrl ? (
+              <a href={waUrl} target="_blank" rel="noopener noreferrer">
+                WhatsApp: {site.phone}
+              </a>
+            ) : (
+              <a href={`tel:${site.phone.replace(/\s+/g, '')}`}>{site.phone}</a>
+            )
+          }
+        </li>
         <li>{site.hours}</li>
       </ul>
     </div>
