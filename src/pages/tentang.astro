@@ -1,9 +1,10 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { getSiteSettings, getTentangContent } from '../lib/content';
+import { getPeople, getSiteSettings, getTentangContent } from '../lib/content';
 
 const site = getSiteSettings();
 const t = getTentangContent();
+const people = getPeople(true);
 ---
 
 <BaseLayout
@@ -68,4 +69,38 @@ const t = getTentangContent();
       </div>
     </div>
   </section>
+
+  {
+    people.length > 0 && (
+      <section class="section" style="padding-top:0">
+        <div class="container">
+          <div class="section-head center">
+            <span class="eyebrow">Sumber Daya Manusia</span>
+            <h2>Pimpinan & Pembina</h2>
+          </div>
+          <div class="feature-grid">
+            {people.map((person) => (
+              <article class="feature-item" style="text-align:center">
+                {person.photo ? (
+                  <img
+                    src={person.photo}
+                    alt={person.name}
+                    style="width:120px;height:120px;border-radius:50%;object-fit:cover;margin:0 auto 1rem;border:3px solid var(--yellow-400)"
+                    loading="lazy"
+                  />
+                ) : (
+                  <div
+                    style="width:120px;height:120px;border-radius:50%;margin:0 auto 1rem;background:linear-gradient(135deg,var(--blue-800),var(--blue-600));border:3px solid var(--yellow-400)"
+                    aria-hidden="true"
+                  />
+                )}
+                <h3>{person.name}</h3>
+                <p>{person.role}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
 </BaseLayout>

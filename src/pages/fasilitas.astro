@@ -29,7 +29,9 @@ const facilities = listFacilities(true);
               <div class="feature-icon">{String(i + 1).padStart(2, '0')}</div>
               <h3><a href={`/fasilitas/${item.slug}`}>{item.title}</a></h3>
               <p>{item.description}</p>
-              <p><a class="btn btn-outline-dark" href={`/fasilitas/${item.slug}`}>Detail fasilitas</a></p>
+              <p class="card-action">
+                <a class="btn btn-outline-dark" href={`/fasilitas/${item.slug}`}>Detail fasilitas</a>
+              </p>
             </article>
           ))
         }

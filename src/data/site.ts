@@ -1,15 +1,20 @@
 export const site = {
   name: 'Cendekia Boarding School',
   shortName: 'Cendekia Boarding School',
-  fullName: 'Pesantren Modern Terpadu Cendekia Boarding School',
+  fullName: 'Pesantren Modern Terpadu Cendekia — SMP Cendekia Boarding School',
   foundation: 'Yayasan Syarif Muslih Institute',
-  tagline: 'Pesantren Modern Terpadu — mendidik generasi berilmu, berakhlak, dan berdaya saing',
+  tagline: "Al-Qur'annya Oke! Akademiknya Oke!",
   email: 'info@cendekiaboardingschool.id',
-  phone: '+62 812-3456-7890',
-  address: 'Bogor, Indonesia',
+  phone: '+62 813-9979-4096',
+  address:
+    'Jl. Raya Kalong Liud, RT 002/RW 007, Desa Hambaro, Kec. Nanggung, Kab. Bogor, Jawa Barat',
   hours: 'Senin–Sabtu, 08.00–16.00 WIB',
-  logo: '/logo.svg',
+  logo: '/logo-cbs.png',
   domain: 'https://cendekiaboardingschool.id',
+  instagram: 'https://instagram.com/cbs_bogor',
+  youtube: 'https://youtube.com/@CBS.BogorTv',
+  facebook: 'https://facebook.com/CBSBogor',
+  mapsUrl: 'https://maps.google.com/?q=Cendekia+Boarding+School+Nanggung+Bogor',
 };
 
 export const nav = [
@@ -23,61 +28,63 @@ export const nav = [
 
 export const programs = [
   {
-    title: 'Tahfidz Al-Qur’an',
-    desc: 'Program hafalan bertahap dengan metode terukur, murojaah rutin, dan bimbingan guru tahfidz.',
-    icon: 'quran',
+    title: "5T Al-Qur'an",
+    desc: 'Tahsin, Tahfidz, Tasmi’, Terjemah, dan Tadabbur Al-Qur’an secara terstruktur.',
   },
   {
-    title: 'Akademik & Sains',
-    desc: 'Penguatan IPA, IPS, dan literasi digital agar santri siap melanjutkan ke jenjang pendidikan tinggi.',
-    icon: 'academic',
+    title: 'Pembiasaan Ibadah Berkualitas',
+    desc: 'Shalat berjamaah, tilawah, dan rutinitas ibadah yang membentuk kedisiplinan ruhani.',
   },
   {
-    title: 'Bahasa Arab & Inggris',
-    desc: 'Pembinaan komunikasi aktif untuk bekal dakwah, akademik, dan pergaulan global yang beradab.',
-    icon: 'language',
+    title: 'Pembentukan Kepribadian Islami',
+    desc: 'Pendidikan karakter tanpa kekerasan berbasis adab dan keteladanan.',
   },
   {
-    title: 'Kitab & Diniyah',
-    desc: 'Pembelajaran kitab kuning dan ilmu syar’i yang menumbuhkan pemahaman Islam yang kokoh.',
-    icon: 'book',
+    title: 'Kajian Syar’i Komprehensif',
+    desc: 'Pembelajaran ilmu syar’i Ahlussunnah Wal Jama’ah yang kokoh dan relevan.',
   },
   {
-    title: 'Kepemimpinan & Karakter',
-    desc: 'Pelatihan soft skill, leadership, dan pembiasaan adab dalam kehidupan asrama sehari-hari.',
-    icon: 'leader',
+    title: 'Kurikulum Nasional + Teknologi',
+    desc: 'Pembelajaran akademik berstandar dengan dukungan teknologi pembelajaran.',
   },
   {
-    title: 'Olahraga & Kesehatan',
-    desc: 'Kegiatan jasmani yang sehat untuk menjaga stamina, disiplin, dan kerja sama tim santri.',
-    icon: 'sport',
+    title: 'Literasi, Numerasi & Kesehatan',
+    desc: 'Penguatan literasi, numerasi, serta pola hidup sehat dan bergizi.',
   },
 ];
 
 export const facilities = [
   {
-    title: 'Masjid & Area Ibadah',
-    desc: 'Pusat kegiatan spiritual: shalat berjamaah, tilawah, kajian, dan pembinaan adab.',
+    title: 'Ruang Kelas Nyaman + Smart TV',
+    desc: 'Kelas bersih, nyaman, dan kondusif dengan dukungan Smart TV.',
   },
   {
-    title: 'Asrama Putra & Putri',
-    desc: 'Pengasuhan 24 jam yang nyaman, aman, dan terarah dengan pendampingan musyrif/musyrifah.',
+    title: 'Lab Komputer + Perpustakaan',
+    desc: 'Fasilitas digital dan literasi untuk menunjang belajar santri.',
   },
   {
-    title: 'Ruang Kelas Modern',
-    desc: 'Lingkungan belajar kondusif dengan fasilitas pendukung pembelajaran aktif.',
+    title: 'Asrama Aman & Nyaman',
+    desc: 'Asrama bersih, aman, dan nyaman dengan pendampingan 24 jam.',
   },
   {
-    title: 'Perpustakaan',
-    desc: 'Koleksi buku keislaman, akademik, dan literasi untuk menumbuhkan budaya membaca.',
-  },
-  {
-    title: 'Laboratorium',
-    desc: 'Fasilitas praktikum sains untuk mengasah nalar ilmiah santri.',
+    title: 'Masjid Luas',
+    desc: 'Masjid dengan fasilitas pendukung untuk ibadah dan kegiatan keagamaan.',
   },
   {
     title: 'Lapangan Olahraga',
-    desc: 'Area olahraga untuk menjaga kebugaran dan menyalurkan potensi santri.',
+    desc: 'Fasilitas futsal, voli, dan bulu tangkis untuk kebugaran santri.',
+  },
+  {
+    title: 'Kantin & Laundry',
+    desc: 'Layanan kantin dan laundry yang mendukung kehidupan asrama.',
+  },
+  {
+    title: 'Lingkungan Hijau & Asri',
+    desc: 'Lingkungan bersih, indah, dan hijau yang mendukung konsentrasi belajar.',
+  },
+  {
+    title: 'Lingkungan Sosial Damai',
+    desc: 'Budaya ukhuwah dan kedamaian dalam kehidupan bersama di pesantren.',
   },
 ];
 

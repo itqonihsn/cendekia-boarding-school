@@ -1,0 +1,23 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { getSchedule } from '../../lib/content';
+
+const rows = getSchedule();
+const text = rows.map((r) => `${r.time} | ${r.activity}`).join('\n');
+---
+
+<AdminLayout title="Jadwal Harian" active="schedule">
+  <form class="form admin-card" method="POST" action="/api/admin/schedule">
+    <p class="admin-media-hint">
+      Satu baris per kegiatan, format: <code>jam | kegiatan</code>. Contoh:
+      <code>04.00 | Bangun tidur &amp; shalat tahajud</code>
+    </p>
+    <label>
+      Jadwal
+      <textarea name="scheduleText" rows="18" required>{text}</textarea>
+    </label>
+    <p style="margin-top:1.25rem">
+      <button class="btn btn-primary" type="submit">Simpan jadwal</button>
+    </p>
+  </form>
+</AdminLayout>

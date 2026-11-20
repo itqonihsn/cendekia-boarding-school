@@ -1,28 +1,291 @@
 import { getDb, readJson, writeJson } from './db';
 import { ensureUniqueSlug } from './slug';
 import {
+  defaultAchievements,
+  defaultActivities,
   defaultHomeContent,
   defaultPageHero,
+  defaultPartners,
+  defaultPeople,
+  defaultPpdbContent,
+  defaultSchedule,
   defaultSiteSettings,
   defaultTentangContent,
+  defaultTestimonials,
 } from './defaults';
 import type {
+  AchievementItem,
+  ActivityItem,
   FacilityItem,
   HomeContent,
   MediaItem,
   NewsItem,
   PageHero,
+  PartnerItem,
+  PersonItem,
+  PpdbContent,
   ProgramItem,
+  ScheduleItem,
   SiteSettings,
+  TestimonialItem,
   TentangContent,
 } from './types';
 
+function nextListId<T extends { id: number }>(items: T[]): number {
+  return items.reduce((max, item) => Math.max(max, item.id), 0) + 1;
+}
+
+function sortPublished<T extends { id: number; published: boolean; sortOrder: number }>(
+  items: T[],
+  publishedOnly: boolean,
+): T[] {
+  const list = publishedOnly ? items.filter((i) => i.published) : items;
+  return [...list].sort((a, b) => a.sortOrder - b.sortOrder || a.id - b.id);
+}
+
 export function getSiteSettings(): SiteSettings {
-  return readJson('site', defaultSiteSettings);
+  return { ...defaultSiteSettings, ...readJson('site', defaultSiteSettings) };
 }
 
 export function saveSiteSettings(value: SiteSettings) {
   writeJson('site', value);
+}
+
+export function getPpdbContent(): PpdbContent {
+  return { ...defaultPpdbContent, ...readJson('ppdb', defaultPpdbContent) };
+}
+
+export function savePpdbContent(value: PpdbContent) {
+  writeJson('ppdb', value);
+}
+
+export function getSchedule(publishedOnly = false): ScheduleItem[] {
+  return sortPublished(readJson('schedule', defaultSchedule), publishedOnly);
+}
+
+export function saveSchedule(items: ScheduleItem[]) {
+  writeJson('schedule', items);
+}
+
+export function getTestimonials(publishedOnly = false): TestimonialItem[] {
+  return sortPublished(readJson('testimonials', defaultTestimonials), publishedOnly);
+}
+
+export function saveTestimonials(items: TestimonialItem[]) {
+  writeJson('testimonials', items);
+}
+
+export function upsertTestimonial(input: Partial<TestimonialItem> & { name: string; quote: string }) {
+  const items = getTestimonials();
+  if (input.id) {
+    const next = items.map((item) =>
+      item.id === input.id
+        ? {
+            ...item,
+            name: input.name,
+            role: input.role ?? item.role,
+            quote: input.quote,
+            photo: input.photo ?? item.photo,
+            published: input.published === false ? false : true,
+            sortOrder: input.sortOrder ?? item.sortOrder,
+          }
+        : item,
+    );
+    saveTestimonials(next);
+    return input.id;
+  }
+  const id = nextListId(items);
+  items.push({
+    id,
+    name: input.name,
+    role: input.role ?? '',
+    quote: input.quote,
+    photo: input.photo ?? '',
+    published: input.published === false ? false : true,
+    sortOrder: input.sortOrder ?? items.length + 1,
+  });
+  saveTestimonials(items);
+  return id;
+}
+
+export function deleteTestimonial(id: number) {
+  saveTestimonials(getTestimonials().filter((i) => i.id !== id));
+}
+
+export function getAchievements(publishedOnly = false): AchievementItem[] {
+  return sortPublished(readJson('achievements', defaultAchievements), publishedOnly);
+}
+
+export function saveAchievements(items: AchievementItem[]) {
+  writeJson('achievements', items);
+}
+
+export function upsertAchievement(
+  input: Partial<AchievementItem> & { title: string; kind: AchievementItem['kind'] },
+) {
+  const items = getAchievements();
+  if (input.id) {
+    saveAchievements(
+      items.map((item) =>
+        item.id === input.id
+          ? {
+              ...item,
+              title: input.title,
+              kind: input.kind,
+              year: input.year ?? item.year,
+              published: input.published === false ? false : true,
+              sortOrder: input.sortOrder ?? item.sortOrder,
+            }
+          : item,
+      ),
+    );
+    return input.id;
+  }
+  const id = nextListId(items);
+  items.push({
+    id,
+    title: input.title,
+    kind: input.kind,
+    year: input.year ?? '',
+    published: input.published === false ? false : true,
+    sortOrder: input.sortOrder ?? items.length + 1,
+  });
+  saveAchievements(items);
+  return id;
+}
+
+export function deleteAchievement(id: number) {
+  saveAchievements(getAchievements().filter((i) => i.id !== id));
+}
+
+export function getActivities(publishedOnly = false): ActivityItem[] {
+  return sortPublished(readJson('activities', defaultActivities), publishedOnly);
+}
+
+export function saveActivities(items: ActivityItem[]) {
+  writeJson('activities', items);
+}
+
+export function upsertActivity(input: Partial<ActivityItem> & { title: string }) {
+  const items = getActivities();
+  if (input.id) {
+    saveActivities(
+      items.map((item) =>
+        item.id === input.id
+          ? {
+              ...item,
+              title: input.title,
+              description: input.description ?? item.description,
+              published: input.published === false ? false : true,
+              sortOrder: input.sortOrder ?? item.sortOrder,
+            }
+          : item,
+      ),
+    );
+    return input.id;
+  }
+  const id = nextListId(items);
+  items.push({
+    id,
+    title: input.title,
+    description: input.description ?? '',
+    published: input.published === false ? false : true,
+    sortOrder: input.sortOrder ?? items.length + 1,
+  });
+  saveActivities(items);
+  return id;
+}
+
+export function deleteActivity(id: number) {
+  saveActivities(getActivities().filter((i) => i.id !== id));
+}
+
+export function getPartners(publishedOnly = false): PartnerItem[] {
+  return sortPublished(readJson('partners', defaultPartners), publishedOnly);
+}
+
+export function savePartners(items: PartnerItem[]) {
+  writeJson('partners', items);
+}
+
+export function upsertPartner(input: Partial<PartnerItem> & { name: string }) {
+  const items = getPartners();
+  if (input.id) {
+    savePartners(
+      items.map((item) =>
+        item.id === input.id
+          ? {
+              ...item,
+              name: input.name,
+              logo: input.logo ?? item.logo,
+              url: input.url ?? item.url,
+              published: input.published === false ? false : true,
+              sortOrder: input.sortOrder ?? item.sortOrder,
+            }
+          : item,
+      ),
+    );
+    return input.id;
+  }
+  const id = nextListId(items);
+  items.push({
+    id,
+    name: input.name,
+    logo: input.logo ?? '',
+    url: input.url ?? '',
+    published: input.published === false ? false : true,
+    sortOrder: input.sortOrder ?? items.length + 1,
+  });
+  savePartners(items);
+  return id;
+}
+
+export function deletePartner(id: number) {
+  savePartners(getPartners().filter((i) => i.id !== id));
+}
+
+export function getPeople(publishedOnly = false): PersonItem[] {
+  return sortPublished(readJson('people', defaultPeople), publishedOnly);
+}
+
+export function savePeople(items: PersonItem[]) {
+  writeJson('people', items);
+}
+
+export function upsertPerson(input: Partial<PersonItem> & { name: string; role: string }) {
+  const items = getPeople();
+  if (input.id) {
+    savePeople(
+      items.map((item) =>
+        item.id === input.id
+          ? {
+              ...item,
+              name: input.name,
+              role: input.role,
+              photo: input.photo ?? item.photo,
+              published: input.published === false ? false : true,
+              sortOrder: input.sortOrder ?? item.sortOrder,
+            }
+          : item,
+      ),
+    );
+    return input.id;
+  }
+  const id = nextListId(items);
+  items.push({
+    id,
+    name: input.name,
+    role: input.role,
+    photo: input.photo ?? '',
+    published: input.published === false ? false : true,
+    sortOrder: input.sortOrder ?? items.length + 1,
+  });
+  savePeople(items);
+  return id;
+}
+
+export function deletePerson(id: number) {
+  savePeople(getPeople().filter((i) => i.id !== id));
 }
 
 export function getHomeContent(): HomeContent {

@@ -1,0 +1,74 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { getPpdbContent } from '../../lib/content';
+
+const ppdb = getPpdbContent();
+---
+
+<AdminLayout title="PPDB & Biaya" active="ppdb">
+  <form class="form admin-card" method="POST" action="/api/admin/ppdb">
+    <div class="admin-grid-2">
+      <label>
+        Status pendaftaran
+        <select name="open">
+          <option value="1" selected={ppdb.open}>Dibuka</option>
+          <option value="0" selected={!ppdb.open}>Ditutup</option>
+        </select>
+      </label>
+      <label>
+        Tahun ajaran
+        <input type="text" name="academicYear" value={ppdb.academicYear} required />
+      </label>
+      <label>
+        Judul hero PPDB
+        <input type="text" name="headline" value={ppdb.headline} required />
+      </label>
+      <label>
+        Tagline
+        <input type="text" name="tagline" value={ppdb.tagline} required />
+      </label>
+      <label>
+        Label tombol CTA
+        <input type="text" name="ctaLabel" value={ppdb.ctaLabel} required />
+      </label>
+      <label>
+        Label biaya pendaftaran
+        <input type="text" name="registrationFeeLabel" value={ppdb.registrationFeeLabel} required />
+      </label>
+      <label>
+        Biaya pendaftaran
+        <input type="text" name="registrationFee" value={ppdb.registrationFee} required />
+      </label>
+      <label>
+        Label uang masuk
+        <input type="text" name="entranceFeeLabel" value={ppdb.entranceFeeLabel} required />
+      </label>
+      <label>
+        Uang masuk
+        <input type="text" name="entranceFee" value={ppdb.entranceFee} required />
+      </label>
+      <label>
+        Label SPP
+        <input type="text" name="sppFeeLabel" value={ppdb.sppFeeLabel} required />
+      </label>
+      <label>
+        SPP bulanan
+        <input type="text" name="sppFee" value={ppdb.sppFee} required />
+      </label>
+      <label>
+        Catatan SPP
+        <input type="text" name="sppNote" value={ppdb.sppNote} />
+      </label>
+    </div>
+    <label style="margin-top:1rem;display:block">
+      Pesan WhatsApp default
+      <textarea name="waMessage" rows="3">{ppdb.waMessage}</textarea>
+    </label>
+    <p class="admin-media-hint">
+      Jika status ditutup, badge dan section biaya disembunyikan di website, tetapi tombol daftar tetap muncul.
+    </p>
+    <p style="margin-top:1.25rem">
+      <button class="btn btn-primary" type="submit">Simpan PPDB</button>
+    </p>
+  </form>
+</AdminLayout>

@@ -1,296 +1,330 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import {
-  getHomeContent,
+  getAchievements,
+  getPpdbContent,
+  getSchedule,
   getSiteSettings,
-  listNews,
+  getTestimonials,
+  listFacilities,
   listPrograms,
 } from '../lib/content';
-import { waHref, waLinkAttrs, whatsappRegistrationUrl } from '../lib/whatsapp';
+import { waHref, waLinkAttrs, whatsappChatUrl } from '../lib/whatsapp';
 
 const site = getSiteSettings();
-const waPendaftaran = whatsappRegistrationUrl(site.phone, site.shortName);
-const home = getHomeContent();
-const programs = listPrograms(true);
-const news = listNews(true).slice(0, 3);
-const heroHasPhoto = Boolean(home.heroImage);
+const ppdb = getPpdbContent();
+const waPendaftaran = whatsappChatUrl(
+  site.phone,
+  ppdb.waMessage ||
+    `Assalamu'alaikum, saya ingin informasi pendaftaran santri baru TA ${ppdb.academicYear} di SMP Cendekia Boarding School.`,
+);
+const waHubungi = whatsappChatUrl(site.phone, `Assalamu'alaikum, saya ingin bertanya tentang CBS.`);
+const facilities = listFacilities(true);
+const schedule = getSchedule(true);
+const testimonials = getTestimonials(true);
+const programs = listPrograms(true).slice(0, 8);
+const achievements = getAchievements(true).filter((a) => a.kind === 'external');
+const phoneDisplay = site.phone.replace(/^\+62\s?/, '0').replace(/[\s-]/g, '');
+
+const alur = [
+  { title: 'Buat Akun', desc: 'Daftar dengan nomor WhatsApp wali' },
+  { title: 'Isi Formulir', desc: 'Data santri, orang tua, asal sekolah' },
+  { title: 'Bayar Pendaftaran', desc: 'Rp 250.000, konfirmasi otomatis' },
+  { title: 'Unggah Berkas', desc: 'Akta, KK, rapor, pas foto' },
+  { title: 'Seleksi', desc: 'Tes akademik, baca Al-Qur’an, wawancara' },
+  { title: 'Pengumuman', desc: 'Hasil di akun dan WhatsApp' },
+  { title: 'Daftar Ulang', desc: 'Lunasi uang masuk, jadwal masuk asrama' },
+];
+
+const fotoTiles = [
+  { src: '/media/foto/halaqah.jpg', label: 'Halaqah Al-Qur’an' },
+  { src: '/media/foto/ruang-kelas.jpg', label: 'Ruang kelas' },
+  { src: '/media/foto/outing-class.jpg', label: 'Outing class' },
+  { src: '/media/foto/bimbel.jpg', label: 'Bimbel intensif' },
+];
 ---
 
 <BaseLayout
-  title={`${site.name} | Pendidikan Islam Unggul`}
-  description="Website resmi Cendekia Boarding School — Pesantren Modern Terpadu di bawah Yayasan Syarif Muslih Institute."
+  title={`SMP Cendekia Boarding School | PPDB ${ppdb.academicYear}`}
+  description={`Penerimaan Santri Baru TA ${ppdb.academicYear}. ${ppdb.tagline}`}
 >
-  <section class="home-hero">
-    <div class="hero-media" class:list={[{ 'has-photo': heroHasPhoto }]} style={heroHasPhoto ? `--hero-photo:url('${home.heroImage}')` : undefined} aria-hidden="true"></div>
-    <div class="container hero-content">
-      <img class="hero-logo" src={site.logo} alt={site.name} width="140" height="140" />
-      <p class="brand-signal">{site.name}</p>
-      <p class="brand-foundation">{site.foundation}</p>
-      <h1>{home.heroTitle} <em>{home.heroEmphasis}</em> &amp; Berakhlak</h1>
-      <p>{home.heroLead}</p>
-      <div class="hero-actions">
-        <a class="btn btn-yellow" href="/program">Lihat Program</a>
-        <a class="btn btn-outline" href={waHref(waPendaftaran)} {...waLinkAttrs(waPendaftaran)}>Info Pendaftaran</a>
-      </div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="container">
-      <div class="section-head center">
-        <span class="eyebrow">{home.foundationEyebrow}</span>
-        <h2>{home.foundationTitle}</h2>
-        <p class="lead">{home.foundationLead}</p>
-      </div>
-      <div class="feature-grid">
-        {
-          home.pillars.map((pillar, i) => (
-            <article class="feature-item">
-              <div class="feature-icon">{String(i + 1).padStart(2, '0')}</div>
-              <h3>{pillar.title}</h3>
-              <p>{pillar.desc}</p>
-            </article>
-          ))
-        }
-      </div>
-    </div>
-  </section>
-
-  <section class="quote-band">
-    <div class="container">
-      <p>{home.quoteText}</p>
-      <cite>{home.quoteCite}</cite>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="container split">
-      <div class="panel" role="img" aria-label="Logo Cendekia Boarding School">
-        <img class="panel-logo" src={site.logo} alt="" />
-      </div>
+  <div class="wrap" style="padding-top:8px">
+    <section class="hero">
       <div>
-        <div class="section-head">
-          <span class="eyebrow">{home.aboutEyebrow}</span>
-          <h2>{home.aboutTitle}</h2>
-          <p class="lead">{home.aboutLead}</p>
-        </div>
-        <ul class="check-list">
-          {home.aboutBullets.map((item) => <li>{item}</li>)}
-        </ul>
-        <p style="margin-top: 1.5rem">
-          <a class="btn btn-primary" href="/tentang">Selengkapnya</a>
+        <div class="org">{site.foundation}</div>
+        <h1>
+          Penerimaan<br />Santri Baru
+        </h1>
+        <div class="ribbon">Tahun Ajaran {ppdb.academicYear}</div>
+        <div class="script">{ppdb.tagline}</div>
+        <p class="lead">
+          Pesantren Modern Terpadu Cendekia — mendidik santri berkarakter ahli ibadah, berilmu, produktif, peduli, dan
+          berjiwa pemimpin.
         </p>
+        <div class="btn-row">
+          <a class="btn btn-gold btn-lg" href={waHref(waPendaftaran)} {...waLinkAttrs(waPendaftaran)}>
+            {ppdb.ctaLabel}
+          </a>
+          <a class="btn btn-ghost btn-lg" href="/kontak">Cek Status Pendaftaran</a>
+        </div>
+      </div>
+      <div class="photo">
+        <img src="/media/foto/gedung-sekolah.jpg" alt="Gedung SMP Cendekia Boarding School" />
+        <div class="tag">
+          <span>Kab. Bogor, Jawa Barat</span>
+          Sekolah Menengah Pertama Islam
+        </div>
+      </div>
+    </section>
+  </div>
+
+  {
+    ppdb.open && (
+      <div class="sec" id="biaya">
+        <div class="wrap">
+          <div class="prices">
+            <div class="price alt">
+              <span class="tt">{ppdb.registrationFeeLabel}</span>
+              <strong>{ppdb.registrationFee}</strong>
+              <small>Dibayar saat membuat akun pendaftar</small>
+            </div>
+            <div class="price">
+              <span class="tt">{ppdb.entranceFeeLabel}</span>
+              <strong>{ppdb.entranceFee.includes('7') ? 'Rp 7,5 Juta' : ppdb.entranceFee}</strong>
+              <small>Satu kali, saat daftar ulang</small>
+            </div>
+            <div class="price">
+              <span class="tt">{ppdb.sppFeeLabel}</span>
+              <strong>{ppdb.sppFee.includes('1,45') || ppdb.sppFee.includes('1.45') ? 'Rp 1,45 Juta' : ppdb.sppFee}</strong>
+              <small>{ppdb.sppNote || 'Pendidikan, makan, laundry'}</small>
+            </div>
+          </div>
+          <p class="note">*) Syarat dan ketentuan berlaku</p>
+        </div>
+      </div>
+    )
+  }
+
+  <div class="sec sky" id="alur" style="border-radius:var(--radius-xl)">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="chip">Alur Pendaftaran</span>
+        <h2>7 langkah dari akun sampai masuk asrama</h2>
+        <p>Alur ini usulan UI; sesuaikan dengan prosedur resmi panitia melalui admin.</p>
+      </div>
+      <div class="steps">
+        {
+          alur.map((step, i) => (
+            <div class="step">
+              <div class="num">{i + 1}</div>
+              <b>{step.title}</b>
+              <span>{step.desc}</span>
+            </div>
+          ))
+        }
       </div>
     </div>
-  </section>
+  </div>
 
-  <section class="section" style="padding-top: 0">
-    <div class="container">
-      <div class="section-head center">
-        <span class="eyebrow">Program</span>
-        <h2>Program Unggulan</h2>
+  <div class="sec" id="gelombang">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="chip">Jadwal PPDB</span>
+        <h2>Gelombang pendaftaran TA {ppdb.academicYear}</h2>
+        <p>Tanggal dan kuota diisi panitia dari panel admin.</p>
       </div>
-      <div class="feature-grid">
+      <div class="wave">
+        <div class="card now">
+          <span class="pill">Sedang dibuka</span>
+          <h3 style="margin-top:12px">Gelombang 1</h3>
+          <p class="ph">dd mmm – dd mmm 2027</p>
+          <p style="margin-top:8px">
+            Kuota: <span class="ph">diisi panitia</span>
+          </p>
+          <p>
+            Tes seleksi: <span class="ph">dd mmm 2027</span>
+          </p>
+          <p>
+            Pengumuman: <span class="ph">dd mmm 2027</span>
+          </p>
+        </div>
+        <div class="card">
+          <span class="pill gold">Segera</span>
+          <h3 style="margin-top:12px">Gelombang 2</h3>
+          <p class="ph">dd mmm – dd mmm 2027</p>
+          <p style="margin-top:8px">
+            Kuota: <span class="ph">diisi panitia</span>
+          </p>
+          <p>
+            Tes seleksi: <span class="ph">dd mmm 2027</span>
+          </p>
+          <p>
+            Pengumuman: <span class="ph">dd mmm 2027</span>
+          </p>
+        </div>
+        <div class="card">
+          <span class="pill gold">Segera</span>
+          <h3 style="margin-top:12px">Gelombang 3</h3>
+          <p class="ph">dd mmm – dd mmm 2027</p>
+          <p style="margin-top:8px">
+            Kuota: <span class="ph">diisi panitia</span>
+          </p>
+          <p>
+            Tes seleksi: <span class="ph">dd mmm 2027</span>
+          </p>
+          <p>
+            Pengumuman: <span class="ph">dd mmm 2027</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec sky" style="border-radius:var(--radius-xl)">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="chip">Program Unggulan</span>
+        <h2>Al Qur'annya Oke! Akademiknya Oke!</h2>
+      </div>
+      <div class="grid g4">
         {
-          programs.slice(0, 3).map((item, i) => (
-            <article class="feature-item">
-              {item.image && <img src={item.image} alt="" class="feature-thumb" loading="lazy" />}
-              <div class="feature-icon">{String(i + 1).padStart(2, '0')}</div>
-              <h3><a href={`/program/${item.slug}`}>{item.title}</a></h3>
+          programs.map((item, i) => (
+            <div class="card">
+              <div class:list={['num', { gold: i % 2 === 1 }]}>{i + 1}</div>
+              <h3>
+                <a href={`/program/${item.slug}`}>{item.title}</a>
+              </h3>
               <p>{item.description}</p>
-            </article>
+            </div>
           ))
         }
       </div>
-      <p class="text-center-actions" style="margin-top:1.75rem">
-        <a class="btn btn-outline-dark" href="/program">Semua Program</a>
-      </p>
     </div>
-  </section>
+  </div>
 
-  <section class="section" style="padding-top: 0">
-    <div class="container">
-      <div class="section-head center">
-        <span class="eyebrow">Berita</span>
-        <h2>Kegiatan Terbaru</h2>
+  <div class="sec">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="chip">Fasilitas dan Sistem Pendukung</span>
+        <h2>Lingkungan belajar yang aman dan hijau</h2>
       </div>
-      <div class="news-grid">
+      <div class="tiles">
         {
-          news.map((item) => (
-            <article class="news-item">
-              {item.coverImage && <img src={item.coverImage} alt="" class="news-cover" loading="lazy" />}
-              <div class="news-meta">
-                <span>{item.category}</span>
-                <span>{item.publishedAt}</span>
-              </div>
-              <h3><a href={`/berita/${item.slug}`}>{item.title}</a></h3>
-              <p>{item.excerpt}</p>
-            </article>
+          fotoTiles.map((tile) => (
+            <div class="tile">
+              <img src={tile.src} alt={tile.label} loading="lazy" />
+              <span>{tile.label}</span>
+            </div>
           ))
         }
       </div>
-      <p class="text-center-actions" style="margin-top:1.75rem">
-        <a class="btn btn-outline-dark" href="/berita">Lihat Berita</a>
-      </p>
+      <ol class="faclist">
+        {facilities.map((f) => <li>{f.title}</li>)}
+      </ol>
     </div>
-  </section>
+  </div>
 
-  <section class="quote-band">
-    <div class="container">
-      <p>{home.ctaQuote}</p>
-      <p style="margin-top: 1.25rem">
-        <a class="btn btn-outline" href={waHref(waPendaftaran)} {...waLinkAttrs(waPendaftaran)}>{home.ctaButton}</a>
-      </p>
+  {
+    schedule.length > 0 && (
+      <div class="sec sky" style="border-radius:var(--radius-xl)">
+        <div class="wrap">
+          <div class="sec-head">
+            <span class="chip">Kehidupan Santri</span>
+            <h2>Jadwal harian</h2>
+          </div>
+          <div class="sched">
+            {schedule.map((row) => (
+              <div class="r">
+                <b>{row.time}</b>
+                <span>{row.activity}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  <div class="sec">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="chip">Kata Wali Santri</span>
+        <h2>Dipercaya orang tua santri</h2>
+      </div>
+      <div class="grid g3">
+        {
+          testimonials.map((item, i) => (
+            <div class:list={['quote', { light: i === 1 }]}>
+              <p>“{item.quote}”</p>
+              <cite>
+                {item.name}
+                <span>{item.role}</span>
+              </cite>
+            </div>
+          ))
+        }
+      </div>
     </div>
-  </section>
+  </div>
+
+  <div class="sec sky" style="border-radius:var(--radius-xl)">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="chip">Prestasi</span>
+        <h2>Santri CBS berprestasi</h2>
+      </div>
+      <div class="grid g4" style="margin-bottom:20px">
+        <div class="stat">
+          <strong>26 juz</strong>
+          <span>Hafalan Ananda Irsyad saat lulus SMP</span>
+        </div>
+        <div class="stat">
+          <strong>7 emas</strong>
+          <span>Medali Pencak Silat IPB Championship 2026</span>
+        </div>
+        <div class="stat">
+          <strong>Juara 1</strong>
+          <span>MHQ Nasional 5 juz, Kuwait 2024</span>
+        </div>
+        <div class="stat">
+          <strong>12 buku</strong>
+          <span>Dibaca Ananda Al Fikri dalam waktu setahun</span>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Prestasi eksternal</h3>
+        <ul class="alist">
+          {achievements.map((a) => (
+            <li>
+              {a.title}
+              {a.year ? ` (${a.year})` : ''}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="wrap">
+      <div class="band">
+        <div>
+          <h2>Siapkan putra-putri Anda menjadi generasi cendekia</h2>
+          <p>
+            Pendaftaran TA {ppdb.academicYear}
+            {ppdb.open ? ' sedang dibuka' : ' — hubungi panitia untuk info terkini'}. Tim PPDB siap membantu lewat
+            WhatsApp.
+          </p>
+        </div>
+        <div class="btn-row">
+          <a class="btn btn-blue btn-lg" href={waHref(waPendaftaran)} {...waLinkAttrs(waPendaftaran)}>
+            Daftar Sekarang
+          </a>
+          <a class="btn btn-line btn-lg" href={waHref(waHubungi)} {...waLinkAttrs(waHubungi)}>
+            Hubungi {phoneDisplay}
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
 </BaseLayout>
-
-<style>
-  .home-hero {
-    position: relative;
-    min-height: min(88vh, 760px);
-    min-height: min(88dvh, 760px);
-    display: grid;
-    align-items: end;
-    overflow: hidden;
-    color: white;
-  }
-
-  .hero-media {
-    position: absolute;
-    inset: 0;
-    background:
-      linear-gradient(105deg, rgba(20, 90, 31, 0.94) 0%, rgba(36, 155, 48, 0.78) 48%, rgba(46, 175, 58, 0.45) 100%),
-      radial-gradient(circle at 78% 30%, rgba(255, 230, 0, 0.35), transparent 35%),
-      linear-gradient(145deg, #145a1f, #2eaf3a 55%, #3ec04a);
-  }
-
-  .hero-media.has-photo {
-    background:
-      linear-gradient(105deg, rgba(20, 90, 31, 0.88) 0%, rgba(36, 155, 48, 0.72) 48%, rgba(46, 175, 58, 0.5) 100%),
-      var(--hero-photo) center/cover no-repeat,
-      linear-gradient(145deg, #145a1f, #2eaf3a 55%, #3ec04a);
-  }
-
-  .hero-media::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 8l6 14h15l-12 9 5 14-14-9-14 9 5-14-12-9h15z' fill='none' stroke='rgba(255,230,0,0.14)' stroke-width='1'/%3E%3C/svg%3E");
-  }
-
-  .hero-content {
-    position: relative;
-    z-index: 1;
-    padding: calc(7rem + env(safe-area-inset-top)) 0 4.5rem;
-    max-width: 40rem;
-    margin-left: max(1rem, calc((100% - var(--container)) / 2));
-    margin-right: auto;
-    width: min(40rem, calc(100% - 2rem));
-    animation: rise 0.8s ease both;
-  }
-
-  .hero-logo {
-    width: clamp(96px, 28vw, 140px);
-    height: auto;
-    aspect-ratio: 819 / 788;
-    object-fit: contain;
-    margin-bottom: 1rem;
-    filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.28));
-  }
-
-  .brand-signal {
-    margin: 0;
-    font-family: var(--font-display);
-    font-size: clamp(1.45rem, 3.2vw, 2.1rem);
-    color: var(--yellow-400);
-    letter-spacing: 0.02em;
-  }
-
-  .brand-foundation {
-    margin: 0.25rem 0 1rem;
-    color: rgba(255, 255, 255, 0.85);
-    font-weight: 600;
-    font-size: 0.95rem;
-  }
-
-  .hero-content h1 {
-    color: white;
-    font-size: clamp(2.4rem, 6vw, 4rem);
-    max-width: 12ch;
-    margin-bottom: 1rem;
-  }
-
-  .hero-content h1 em {
-    font-style: normal;
-    color: var(--yellow-400);
-  }
-
-  .hero-content > p {
-    color: rgba(255, 255, 255, 0.9);
-    font-size: 1.08rem;
-    max-width: 32em;
-  }
-
-  .hero-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    margin-top: 1.75rem;
-  }
-
-  .feature-thumb,
-  .news-cover {
-    width: 100%;
-    border-radius: 0.75rem;
-    margin-bottom: 0.75rem;
-    aspect-ratio: 16/10;
-    object-fit: cover;
-  }
-
-  @keyframes rise {
-    from {
-      opacity: 0;
-      transform: translateY(18px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @media (max-width: 700px) {
-    .home-hero {
-      min-height: auto;
-    }
-    .hero-content {
-      padding: calc(5rem + env(safe-area-inset-top)) 0 calc(2.75rem + env(safe-area-inset-bottom));
-      margin-left: max(0.625rem, calc((100% - var(--container)) / 2));
-      width: min(40rem, calc(100% - 1.25rem));
-    }
-    .hero-content h1 {
-      max-width: none;
-      font-size: clamp(2rem, 9vw, 2.75rem);
-    }
-    .brand-signal {
-      font-size: clamp(1.2rem, 5vw, 1.45rem);
-      line-height: 1.25;
-    }
-    .brand-foundation {
-      font-size: 0.88rem;
-      line-height: 1.4;
-    }
-    .hero-content > p {
-      font-size: 1rem;
-    }
-    .hero-logo {
-      width: min(32vw, 112px);
-    }
-    .hero-actions {
-      flex-direction: column;
-    }
-    .hero-actions .btn {
-      width: 100%;
-    }
-  }
-</style>

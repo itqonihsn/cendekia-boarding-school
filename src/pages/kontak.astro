@@ -86,16 +86,16 @@ const waMeBase = whatsappDigits(site.phone);
           Isi formulir di bawah — pesan akan terbuka di WhatsApp (Web atau aplikasi) siap dikirim.
         </p>
         <form class="form wa-compose" style="margin-top:1rem" id="form-wa">
-          <label>
-            Nama
+          <label class="field-block">
+            <span>Nama</span>
             <input type="text" name="nama" required placeholder="Nama lengkap" autocomplete="name" />
           </label>
-          <label>
-            Email (opsional)
+          <label class="field-block">
+            <span>Email (opsional)</span>
             <input type="email" name="email" placeholder="email@contoh.com" autocomplete="email" />
           </label>
-          <label>
-            Perihal
+          <label class="field-block">
+            <span>Perihal</span>
             <select name="perihal" required>
               <option value="">Pilih perihal</option>
               <option>Info Pendaftaran</option>
@@ -104,8 +104,8 @@ const waMeBase = whatsappDigits(site.phone);
               <option>Lainnya</option>
             </select>
           </label>
-          <label>
-            Pesan
+          <label class="field-block">
+            <span>Pesan</span>
             <textarea name="pesan" required placeholder="Tuliskan pesan Anda" rows="4"></textarea>
           </label>
           <button class="btn btn-primary wa-btn" type="submit">Kirim lewat WhatsApp</button>
@@ -148,9 +148,22 @@ const waMeBase = whatsappDigits(site.phone);
 }
 
 <style>
+  .wa-compose .field-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    width: 100%;
+  }
+
+  .wa-compose .field-block span {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--navy-900);
+  }
+
   .wa-link {
     font-weight: 600;
-    color: var(--green-800);
+    color: var(--blue-700);
     text-decoration: underline;
     text-underline-offset: 2px;
   }
