@@ -25,6 +25,10 @@ const site = getSiteSettings();
       </p>
       <label>Alamat<input type="text" name="address" value={site.address} required /></label>
       <label>Jam layanan<input type="text" name="hours" value={site.hours} required /></label>
+      <label>Instagram URL<input type="url" name="instagram" value={site.instagram} placeholder="https://instagram.com/..." /></label>
+      <label>YouTube URL<input type="url" name="youtube" value={site.youtube} placeholder="https://youtube.com/..." /></label>
+      <label>Facebook URL<input type="url" name="facebook" value={site.facebook} placeholder="https://facebook.com/..." /></label>
+      <label>Google Maps URL<input type="url" name="mapsUrl" value={site.mapsUrl} placeholder="https://maps.google.com/..." /></label>
     </div>
     <hr style="margin:1.25rem 0;border:none;border-top:1px solid var(--line)" />
     <AdminImageField

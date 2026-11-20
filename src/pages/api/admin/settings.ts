@@ -36,6 +36,10 @@ export const POST: APIRoute = async ({ request, redirect }) => {
     hours: String(form.get('hours') || current.hours),
     logo,
     domain: String(form.get('domain') || current.domain),
+    instagram: String(form.get('instagram') || current.instagram || ''),
+    youtube: String(form.get('youtube') || current.youtube || ''),
+    facebook: String(form.get('facebook') || current.facebook || ''),
+    mapsUrl: String(form.get('mapsUrl') || current.mapsUrl || ''),
   });
 
   return redirect(`${returnTo}?saved=1`);

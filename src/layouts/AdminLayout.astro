@@ -11,8 +11,15 @@ const { title, active = '' } = Astro.props;
 
 const links = [
   { href: '/admin', label: 'Dashboard', key: 'dashboard' },
+  { href: '/admin/ppdb', label: 'PPDB & Biaya', key: 'ppdb' },
+  { href: '/admin/schedule', label: 'Jadwal Harian', key: 'schedule' },
+  { href: '/admin/testimonials', label: 'Testimoni', key: 'testimonials' },
+  { href: '/admin/achievements', label: 'Prestasi', key: 'achievements' },
+  { href: '/admin/activities', label: 'Kegiatan Istimewa', key: 'activities' },
+  { href: '/admin/partners', label: 'Mitra', key: 'partners' },
+  { href: '/admin/people', label: 'Pimpinan / SDM', key: 'people' },
   { href: '/admin/settings', label: 'Pengaturan Situs', key: 'settings' },
-  { href: '/admin/home', label: 'Beranda', key: 'home' },
+  { href: '/admin/home', label: 'Beranda (cerita)', key: 'home' },
   { href: '/admin/tentang', label: 'Tentang', key: 'tentang' },
   { href: '/admin/pages', label: 'Hero Halaman', key: 'pages' },
   { href: '/admin/programs', label: 'Program', key: 'programs' },

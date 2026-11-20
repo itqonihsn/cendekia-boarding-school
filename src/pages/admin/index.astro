@@ -1,11 +1,22 @@
 ---
 import AdminLayout from '../../layouts/AdminLayout.astro';
-import { listNews, listPrograms } from '../../lib/content';
+import {
+  getAchievements,
+  getActivities,
+  getPpdbContent,
+  getTestimonials,
+  listNews,
+  listPrograms,
+} from '../../lib/content';
 import { getSession } from '../../lib/auth';
 
 const session = getSession(Astro.cookies)!;
+const ppdb = getPpdbContent();
 const newsCount = listNews().length;
 const programCount = listPrograms().length;
+const testimonialCount = getTestimonials().length;
+const achievementCount = getAchievements().length;
+const activityCount = getActivities().length;
 ---
 
 <AdminLayout title="Dashboard" active="dashboard">
@@ -13,14 +24,24 @@ const programCount = listPrograms().length;
     <div class="admin-card">
       <h2 style="margin-top:0">Selamat datang, {session.username}</h2>
       <p style="color:var(--muted)">
-        Gunakan menu di kiri untuk mengubah teks, foto, video, program, fasilitas, dan berita. Perubahan langsung tampil di website publik.
+        Kelola PPDB, biaya, jadwal, testimoni, prestasi, dan konten pesantren. Perubahan langsung tampil di website publik.
+      </p>
+      <p>
+        <a class="btn btn-primary" href="/admin/ppdb">Kelola PPDB &amp; Biaya</a>
       </p>
     </div>
     <div class="admin-card">
       <h3 style="margin-top:0">Ringkasan</h3>
       <ul class="check-list">
-        <li>{programCount} program terdaftar</li>
-        <li>{newsCount} berita / kegiatan</li>
+        <li>
+          PPDB TA {ppdb.academicYear}: <strong>{ppdb.open ? 'Dibuka' : 'Ditutup'}</strong>
+        </li>
+        <li>Uang masuk: {ppdb.entranceFee}</li>
+        <li>SPP: {ppdb.sppFee}</li>
+        <li>{programCount} program · {newsCount} berita</li>
+        <li>
+          {testimonialCount} testimoni · {achievementCount} prestasi · {activityCount} kegiatan
+        </li>
       </ul>
     </div>
   </div>

@@ -1,0 +1,117 @@
+/* SMP Cendekia Boarding School — generated from tokens.json */
+:root, [data-theme="light"] {
+  --navy-900: #0a2463; /* Panel terdalam: footer, kartu statistik, ujung gradien hero, judul section di atas putih. Teks di atasnya: on-blue atau sky-100. */
+  --blue-700: #0f4cba; /* Biru utama brosur: panel hero, tombol utama, nomor langkah. Teks di atasnya: on-blue. */
+  --blue-600: #1e66d6; /* Ujung terang gradien biru dan tepi area unggah. Teks putih di atasnya 5,1:1. */
+  --blue-500: #3b8fe8; /* Dekoratif saja (garis, ilustrasi). Jangan dipakai untuk teks. */
+  --teal-700: #0b6aa6; /* Chip judul section (seperti label 'Fasilitas dan Sistem Pendukung' di brosur) dan tautan pada latar putih. */
+  --sky-100: #e3effc; /* Latar baris selang-seling, chip aktif navigasi, teks sekunder di atas navy-900 atau blue-700. */
+  --sky-50: #f3f8fe; /* Latar halaman terang (surface-sky) di belakang kartu putih. */
+  --gold-500: #e2a62a; /* Emas pita brosur: tombol CTA, pita tahun ajaran, penanda progres. Teks di atasnya: ink. */
+  --gold-300: #f4d47a; /* Emas muda: band CTA, cincin badge harga, aksen teks di atas navy-900 dan blue-700. */
+  --gold-700: #8a5a00; /* Teks emas pada latar putih atau sky-100 (5,8:1). */
+  --orange-500: #f58a1f; /* Badge harga (Uang Masuk, SPP Bulanan). Teks di atasnya: ink, bukan putih. */
+  --ink: #12203d; /* Teks utama di atas surface, surface-sky, sky-100, gold, orange. */
+  --ink-muted: #3f506e; /* Teks sekunder, hint form, border input (3:1+) di atas surface dan sky-100. */
+  --line: #cfddf0; /* Border hairline kartu dan pemisah. Bukan untuk border kontrol interaktif. */
+  --surface: #ffffff; /* Latar kartu, navbar, input. */
+  --surface-sky: var(--sky-50); /* Latar halaman dan section selang-seling. */
+  --on-blue: #ffffff; /* Teks dan ikon di atas navy-900, blue-700, blue-600, teal-700, success. */
+  --success: #126b44; /* Status diterima/terverifikasi; selalu dengan kata, bukan warna saja. Teks putih di atasnya. */
+  --success-bg: #ddf3e8; /* Latar pill status sukses; teks success di atasnya. */
+  --warn: #7a4a00; /* Status menunggu/perlu tindakan; teks pada warn-bg. */
+  --warn-bg: #ffebc2; /* Latar pill status menunggu. */
+  --danger: #b3261e; /* Error form dan status ditolak; selalu dengan teks pesan. */
+  --danger-bg: #fbe0dd; /* Latar pill status ditolak. */
+  --shadow-card: 0 6px 20px rgba(10,36,99,0.12); /* Kartu dan navbar di atas surface-sky. */
+  --shadow-pop: 0 12px 28px rgba(10,36,99,0.22); /* Label melayang di atas foto hero. */
+}
+:root {
+  --space-1: 4px; /* Jarak ikon-teks. */
+  --space-2: 8px; /* Jarak antar chip dan pill. */
+  --space-3: 12px; /* Jarak antar tombol dan antar baris form kecil. */
+  --space-4: 16px; /* Gap grid kartu. */
+  --space-5: 24px; /* Padding kartu besar dan navbar. */
+  --space-6: 32px; /* Gap kolom hero. */
+  --space-7: 48px; /* Padding hero dan header halaman. */
+  --space-8: 56px; /* Padding vertikal antar section. */
+  --radius-sm: 8px; /* Input, chip judul. */
+  --radius-md: 12px; /* Kartu kecil, langkah, foto tile. */
+  --radius-lg: 20px; /* Kartu utama, badge harga, navbar. */
+  --radius-xl: 32px; /* Panel hero, band CTA, footer. */
+  --radius-pill: 999px; /* Tombol, pill status, nomor langkah. */
+  --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-script: "Kaushan Script", "Brush Script MT", cursive;
+  --text-display-xl: 800 56px/58px var(--font-sans); /* Judul hero 'Penerimaan Santri Baru'. */
+  --text-display-lg: 800 40px/46px var(--font-sans); /* Judul halaman (PPDB, Profil). */
+  --text-h2: 800 32px/40px var(--font-sans); /* Judul section. */
+  --text-h3: 700 20px/28px var(--font-sans); /* Judul kartu dan form. */
+  --text-body: 400 16px/26px var(--font-sans); /* Paragraf dan isi list. */
+  --text-body-sm: 400 14px/22px var(--font-sans); /* Isi kartu, tabel jadwal, footer. */
+  --text-label: 700 13px/18px var(--font-sans); /* Label field, chip, kategori. */
+  --text-caption: 500 12px/18px var(--font-sans); /* Hint, catatan 'Syarat dan ketentuan berlaku'. */
+  --text-tagline: 400 28px/34px var(--font-script); /* Tagline 'Al Qur'annya Oke! Akademiknya Oke!' saja, satu per halaman. */
+}
+.display-xl {
+  font-family: var(--font-sans);
+  font-size: 56px;
+  line-height: 58px;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+.display-lg {
+  font-family: var(--font-sans);
+  font-size: 40px;
+  line-height: 46px;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+.h2 {
+  font-family: var(--font-sans);
+  font-size: 32px;
+  line-height: 40px;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+.h3 {
+  font-family: var(--font-sans);
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.body {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 26px;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.body-sm {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.label {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.caption {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+.tagline {
+  font-family: var(--font-script);
+  font-size: 28px;
+  line-height: 34px;
+  font-weight: 400;
+  letter-spacing: 0;
+}

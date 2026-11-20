@@ -32,7 +32,9 @@ const news = listNews(true);
               </div>
               <h3><a href={`/berita/${item.slug}`}>{item.title}</a></h3>
               <p>{item.excerpt}</p>
-              <p><a class="btn btn-outline-dark" href={`/berita/${item.slug}`}>Baca selengkapnya</a></p>
+              <p class="card-action">
+                <a class="btn btn-outline-dark" href={`/berita/${item.slug}`}>Baca selengkapnya</a>
+              </p>
             </article>
           ))
         }

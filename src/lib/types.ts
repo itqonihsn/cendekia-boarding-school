@@ -10,6 +10,10 @@ export type SiteSettings = {
   hours: string;
   logo: string;
   domain: string;
+  instagram: string;
+  youtube: string;
+  facebook: string;
+  mapsUrl: string;
 };
 
 export type PageHero = {
@@ -61,6 +65,75 @@ export type TentangContent = {
   valuesEyebrow: string;
   valuesTitle: string;
   values: TentangValue[];
+};
+
+export type PpdbContent = {
+  open: boolean;
+  academicYear: string;
+  headline: string;
+  tagline: string;
+  registrationFeeLabel: string;
+  registrationFee: string;
+  entranceFeeLabel: string;
+  entranceFee: string;
+  sppFeeLabel: string;
+  sppFee: string;
+  sppNote: string;
+  waMessage: string;
+  ctaLabel: string;
+};
+
+export type ScheduleItem = {
+  id: number;
+  time: string;
+  activity: string;
+  published: boolean;
+  sortOrder: number;
+};
+
+export type TestimonialItem = {
+  id: number;
+  name: string;
+  role: string;
+  quote: string;
+  photo: string;
+  published: boolean;
+  sortOrder: number;
+};
+
+export type AchievementItem = {
+  id: number;
+  title: string;
+  kind: 'external' | 'internal';
+  year: string;
+  published: boolean;
+  sortOrder: number;
+};
+
+export type ActivityItem = {
+  id: number;
+  title: string;
+  description: string;
+  published: boolean;
+  sortOrder: number;
+};
+
+export type PartnerItem = {
+  id: number;
+  name: string;
+  logo: string;
+  url: string;
+  published: boolean;
+  sortOrder: number;
+};
+
+export type PersonItem = {
+  id: number;
+  name: string;
+  role: string;
+  photo: string;
+  published: boolean;
+  sortOrder: number;
 };
 
 export type VideoKind = 'none' | 'youtube' | 'upload';

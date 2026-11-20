@@ -1,13 +1,20 @@
 import { DatabaseSync } from 'node:sqlite';
 import bcrypt from 'bcryptjs';
 import {
+  defaultAchievements,
+  defaultActivities,
   defaultFacilities,
   defaultHomeContent,
   defaultNews,
   defaultPageHero,
+  defaultPartners,
+  defaultPeople,
+  defaultPpdbContent,
   defaultPrograms,
+  defaultSchedule,
   defaultSiteSettings,
   defaultTentangContent,
+  defaultTestimonials,
 } from './defaults';
 import { getDbPath } from './paths';
 
@@ -189,11 +196,29 @@ function seedIfEmpty(database: DatabaseSync) {
   }
 }
 
+/** For existing DBs: insert brochure keys only when missing (never overwrite admin edits). */
+function seedMissingKeys(database: DatabaseSync) {
+  const ensure = (key: string, value: unknown) => {
+    const row = database.prepare(`SELECT 1 AS ok FROM content WHERE key = ?`).get(key) as
+      | { ok: number }
+      | undefined;
+    if (!row) setJson(database, key, value);
+  };
+  ensure('ppdb', defaultPpdbContent);
+  ensure('schedule', defaultSchedule);
+  ensure('testimonials', defaultTestimonials);
+  ensure('achievements', defaultAchievements);
+  ensure('activities', defaultActivities);
+  ensure('partners', defaultPartners);
+  ensure('people', defaultPeople);
+}
+
 export function getDb(): DatabaseSync {
   if (!db) {
     db = new DatabaseSync(getDbPath());
     migrate(db);
     seedIfEmpty(db);
+    seedMissingKeys(db);
   }
   return db;
 }
